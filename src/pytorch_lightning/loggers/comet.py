@@ -26,12 +26,12 @@ from torch import is_tensor, Tensor
 import pytorch_lightning as pl
 from pytorch_lightning.loggers.logger import Logger, rank_zero_experiment
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
-from pytorch_lightning.utilities.imports import _module_available
+from pytorch_lightning.utilities.imports import _RequirementAvailable
 from pytorch_lightning.utilities.logger import _add_prefix, _convert_params, _flatten_dict
 from pytorch_lightning.utilities.rank_zero import rank_zero_only
 
 log = logging.getLogger(__name__)
-_COMET_AVAILABLE = _module_available("comet_ml")
+_COMET_AVAILABLE = _RequirementAvailable("comet_ml")
 
 if _COMET_AVAILABLE:
     import comet_ml
@@ -44,6 +44,9 @@ if _COMET_AVAILABLE:
     except ModuleNotFoundError:  # pragma: no-cover
         # For more information, see: https://www.comet.ml/docs/python-sdk/releases/#release-300
         from comet_ml.papi import API  # pragma: no-cover
+
+    # needed to prevent ModuleNotFoundError and duplicated logs.
+    os.environ["COMET_DISABLE_AUTO_LOGGING"] = "1"
 else:
     # needed for test mocks, these tests shall be updated
     comet_ml = None
