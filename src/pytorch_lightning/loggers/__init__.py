@@ -23,7 +23,7 @@ from pytorch_lightning.loggers.tensorboard import TensorBoardLogger
 __all__ = ["CSVLogger", "LightningLoggerBase", "Logger", "LoggerCollection", "TensorBoardLogger"]
 
 from pytorch_lightning.loggers.comet import _COMET_AVAILABLE, CometLogger  # noqa: F401
-from pytorch_lightning.loggers.mlflow import _MLFLOW_AVAILABLE, MLFlowLogger  # noqa: F401
+from pytorch_lightning.loggers.mlflow import MLFlowLogger  # noqa: F401
 from pytorch_lightning.loggers.neptune import NeptuneLogger  # noqa: F401
 from pytorch_lightning.loggers.wandb import WandbLogger  # noqa: F401
 
@@ -31,6 +31,3 @@ if _COMET_AVAILABLE:
     __all__.append("CometLogger")
     # needed to prevent ModuleNotFoundError and duplicated logs.
     environ["COMET_DISABLE_AUTO_LOGGING"] = "1"
-
-if _MLFLOW_AVAILABLE:
-    __all__.append("MLFlowLogger")

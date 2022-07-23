@@ -19,8 +19,9 @@ import pytest
 
 from pytorch_lightning import Trainer
 from pytorch_lightning.demos.boring_classes import BoringModel
-from pytorch_lightning.loggers import _MLFLOW_AVAILABLE, MLFlowLogger
+from pytorch_lightning.loggers import MLFlowLogger
 from pytorch_lightning.loggers.mlflow import MLFLOW_RUN_NAME, resolve_tags
+from pytorch_lightning.utilities.imports import _RequirementAvailable
 
 
 def mock_mlflow_run_creation(logger, experiment_name=None, experiment_id=None, run_id=None):
@@ -164,7 +165,7 @@ def test_mlflow_log_dir(client, mlflow, tmpdir):
 
 def test_mlflow_logger_dirs_creation(tmpdir):
     """Test that the logger creates the folders and files in the right place."""
-    if not _MLFLOW_AVAILABLE:
+    if not _RequirementAvailable("mlflow"):
         pytest.xfail("test for explicit file creation requires mlflow dependency to be installed.")
 
     assert not os.listdir(tmpdir)
