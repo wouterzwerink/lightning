@@ -16,23 +16,7 @@ class TheModel(nn.Module):
         return torch.nn.functional.mse_loss(x, torch.ones_like(x))
 
 
-def worker(rank):
-    os.environ["MASTER_ADDR"] = "localhost"
-    os.environ["MASTER_PORT"] = "12234"
-    os.environ["WORLD_SIZE"] = "2"
-    os.environ["RANK"] = str(rank)
-    os.environ["LOCAL_RANK"] = str(rank)
-    deepspeed.init_distributed()
-    model = TheModel()
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
-    model_parameters = filter(lambda p: p.requires_grad, model.parameters())
-    deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
-        args=argparse.Namespace(device_rank=rank),
-        model=model,
-        model_parameters=model_parameters,  # type: ignore
-        optimizer=optimizer,
-        dist_init_required=False,
-        config={
+config = {
             "activation_checkpointing": {
                 "contiguous_memory_optimization": False,
                 "cpu_checkpointing": False,
@@ -59,7 +43,32 @@ def worker(rank):
                 "sub_group_size": 1000000000000,
             },
         },
+
+
+def worker(rank):
+    os.environ["MASTER_ADDR"] = "localhost"
+    os.environ["MASTER_PORT"] = "12234"
+    os.environ["WORLD_SIZE"] = "2"
+    os.environ["RANK"] = str(rank)
+    os.environ["LOCAL_RANK"] = str(rank)
+    deepspeed.init_distributed()
+
+    model_parallel_context = deepspeed.zero.Init(
+        remote_device="nvme", pin_memory=True, config_dict_or_path=config, dtype=torch.float32
     )
+
+    with model_parallel_context:
+        model = TheModel()
+        optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
+        model_parameters = filter(lambda p: p.requires_grad, model.parameters())
+        deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
+            args=argparse.Namespace(device_rank=rank),
+            model=model,
+            model_parameters=model_parameters,  # type: ignore
+            optimizer=optimizer,
+            dist_init_required=False,
+            config=config
+        )
 
 
 if __name__ == "__main__":

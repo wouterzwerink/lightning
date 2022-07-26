@@ -19,6 +19,7 @@ class TheModel(nn.Module):
 def run():
     class Lite(LightningLite):
         def run(self):
+
             model = TheModel()
             optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
             deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
