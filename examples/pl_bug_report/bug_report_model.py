@@ -1,5 +1,6 @@
 import deepspeed
 import torch
+import torch.nn as nn
 
 from pytorch_lightning.lite import LightningLite
 from pytorch_lightning.strategies import DeepSpeedStrategy
