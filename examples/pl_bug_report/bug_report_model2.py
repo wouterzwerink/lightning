@@ -9,7 +9,8 @@ import torch.nn as nn
 class TheModel(nn.Module):
     def __init__(self):
         super().__init__()
-        self.layer = torch.nn.Linear(32, 2, bias=False)
+        # self.layer = torch.nn.Linear(32, 2, bias=False)
+        self.layer = nn.Conv2d(9, 9, 3)
 
     def forward(self, x):
         x = self.layer(x)
