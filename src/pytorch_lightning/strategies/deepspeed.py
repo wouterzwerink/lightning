@@ -19,6 +19,7 @@ import os
 import platform
 from collections import OrderedDict
 from pathlib import Path
+from pprint import pprint
 from typing import Any, Dict, Generator, List, Mapping, Optional, Tuple, Union
 
 import torch
@@ -427,6 +428,7 @@ class DeepSpeedStrategy(DDPStrategy):
         This calls :func:`deepspeed.initialize` internally.
         """
         model_parameters = filter(lambda p: p.requires_grad, model.parameters())
+        pprint(self.config)
         deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
             args=argparse.Namespace(device_rank=self.root_device.index),
             config=self.config,
