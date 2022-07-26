@@ -418,7 +418,7 @@ def test_deepspeed_multiple_models():
             )
 
 
-    Lite(strategy=DeepSpeedStrategy(stage=3), devices=2, accelerator="gpu").run()
+    Lite(strategy=DeepSpeedStrategy(stage=3, logging_batch_size_per_gpu=1), devices=2, accelerator="gpu").run()
 
 
 
@@ -428,7 +428,7 @@ def worker(rank):
     os.environ["MASTER_PORT"] = "12234"
     os.environ["LOCAL_RANK"] = str(rank)
     import deepspeed
-    torch.distributed.init_process_group(backend="gloo", world_size=2, rank=rank)
+    deepspeed.init_process_group(backend="gloo", world_size=2, rank=rank)
     model = BoringModel()
     optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
     model_parameters = filter(lambda p: p.requires_grad, model.parameters())
