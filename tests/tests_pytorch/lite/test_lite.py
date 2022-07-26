@@ -415,26 +415,27 @@ def test_deepspeed_multiple_models():
                 model_parameters=model_parameters,  # type: ignore
                 optimizer=optimizer,
                 dist_init_required=False,
-                config={'activation_checkpointing': {'contiguous_memory_optimization': False,
-                                                     'cpu_checkpointing': False,
-                                                     'partition_activations': False,
-                                                     'synchronize_checkpoint_boundary': False},
-                        'aio': {'block_size': 1048576,
-                                'overlap_events': True,
-                                'queue_depth': 8,
-                                'single_submit': False,
-                                'thread_count': 1},
-                        'train_micro_batch_size_per_gpu': 1,
-                        'zero_allow_untested_optimizer': True,
-                        'zero_optimization': {'allgather_bucket_size': 200000000,
-                                              'allgather_partitions': True,
-                                              'contiguous_gradients': True,
-                                              'overlap_comm': True,
-                                              'reduce_bucket_size': 200000000,
-                                              'reduce_scatter': True,
-                                              'stage': 3,
-                                              'sub_group_size': 1000000000000}}
             )
+            #     config={'activation_checkpointing': {'contiguous_memory_optimization': False,
+            #                                          'cpu_checkpointing': False,
+            #                                          'partition_activations': False,
+            #                                          'synchronize_checkpoint_boundary': False},
+            #             'aio': {'block_size': 1048576,
+            #                     'overlap_events': True,
+            #                     'queue_depth': 8,
+            #                     'single_submit': False,
+            #                     'thread_count': 1},
+            #             'train_micro_batch_size_per_gpu': 1,
+            #             'zero_allow_untested_optimizer': True,
+            #             'zero_optimization': {'allgather_bucket_size': 200000000,
+            #                                   'allgather_partitions': True,
+            #                                   'contiguous_gradients': True,
+            #                                   'overlap_comm': True,
+            #                                   'reduce_bucket_size': 200000000,
+            #                                   'reduce_scatter': True,
+            #                                   'stage': 3,
+            #                                   'sub_group_size': 1000000000000}}
+            # )
 
 
     Lite(strategy=DeepSpeedStrategy(stage=3, logging_batch_size_per_gpu=1), devices=2, accelerator="gpu").run()
