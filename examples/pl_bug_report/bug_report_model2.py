@@ -42,7 +42,7 @@ config = {
                 "stage": 3,
                 "sub_group_size": 1000000000000,
             },
-        },
+        }
 
 
 def worker(rank):
@@ -67,7 +67,7 @@ def worker(rank):
             model_parameters=model_parameters,  # type: ignore
             optimizer=optimizer,
             dist_init_required=False,
-            config=config
+            config=config,
         )
 
 
