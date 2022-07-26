@@ -24,7 +24,7 @@ def worker(rank):
     os.environ["MASTER_ADDR"] = "localhost"
     os.environ["MASTER_PORT"] = "12234"
     os.environ["LOCAL_RANK"] = str(rank)
-    deepspeed.init_distributed("gloo", distributed_port= 12234)
+    deepspeed.init_distributed("nccl", distributed_port= 12234)
     model = TheModel()
     optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
     model_parameters = filter(lambda p: p.requires_grad, model.parameters())
