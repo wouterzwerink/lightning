@@ -115,6 +115,8 @@ class _LiteModule(DeviceDtypeModuleMixin):
         return output
 
     def __getattr__(self, item: Any) -> Any:
+        if item == "_ds_child_entered":
+            breakpoint()
         try:
             # __getattr__ gets called as a last resort if the attribute does not exist
             # call nn.Module's implementation first
