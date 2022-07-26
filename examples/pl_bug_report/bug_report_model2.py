@@ -53,22 +53,21 @@ def worker(rank):
     os.environ["LOCAL_RANK"] = str(rank)
     deepspeed.init_distributed()
 
-    # model_parallel_context = deepspeed.zero.Init(
-    #     remote_device="cpu", pin_memory=True, config_dict_or_path=config, dtype=torch.float32
-    # )
-
-    # with model_parallel_context:
-    model = TheModel()
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
-    model_parameters = filter(lambda p: p.requires_grad, model.parameters())
-    deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
-        args=argparse.Namespace(device_rank=rank),
-        model=model,
-        model_parameters=model_parameters,  # type: ignore
-        optimizer=optimizer,
-        dist_init_required=False,
-        config=config,
+    model_parallel_context = deepspeed.zero.Init(
+        remote_device="cpu", pin_memory=True, config_dict_or_path=config, dtype=torch.float32
     )
+
+    with model_parallel_context:
+        model = TheModel()
+        optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
+        deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
+            args=argparse.Namespace(device_rank=rank),
+            model=model,
+            model_parameters=model.parameters(),
+            optimizer=optimizer,
+            dist_init_required=False,
+            config=config,
+        )
 
 
 if __name__ == "__main__":
