@@ -418,7 +418,7 @@ def test_deepspeed_multiple_models():
             )
 
 
-    Lite(strategy="deepspeed", devices=2, accelerator="gpu").run()
+    Lite(strategy=DeepSpeedStrategy(stage=3), devices=2, accelerator="gpu").run()
 
 
 
