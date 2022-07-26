@@ -53,9 +53,11 @@ def worker(rank):
         remote_device="cpu", pin_memory=True, config_dict_or_path=config, dtype=torch.float32
     )
 
+    # If the context goes over the model AND the deepspeed.initilize call, we get an infinite recursion error
     with model_parallel_context:
         model = TheModel()
 
+    # If the context only goes over the model, no error occurs (unindent the lines below)
         deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
             args=argparse.Namespace(device_rank=rank),
             model=model,
