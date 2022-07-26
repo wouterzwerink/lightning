@@ -22,10 +22,10 @@ def run():
         def run(self):
             model = TheModel()
             optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
-            model_parameters = filter(lambda p: p.requires_grad, model.parameters())
+            # model_parameters = filter(lambda p: p.requires_grad, model.parameters())
             deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
                 model=model,
-                model_parameters=model_parameters,
+                model_parameters=model.parameters(),
                 optimizer=optimizer,
                 dist_init_required=False,
             )
