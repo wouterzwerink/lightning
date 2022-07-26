@@ -21,8 +21,11 @@ class TheModel(nn.Module):
 
 
 def worker(rank):
+    # ["RANK", "WORLD_SIZE", "MASTER_ADDR", "MASTER_PORT", "LOCAL_RANK"]
     os.environ["MASTER_ADDR"] = "localhost"
     os.environ["MASTER_PORT"] = "12234"
+    os.environ["WORLD_SIZE"] = "2"
+    os.environ["RANK"] = str(rank)
     os.environ["LOCAL_RANK"] = str(rank)
     deepspeed.init_distributed()
     model = TheModel()
