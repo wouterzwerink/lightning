@@ -400,6 +400,48 @@ def test_autocast():
     lite._precision_plugin.forward_context().__exit__.assert_called()
 
 
+
+@RunIf(min_cuda_gpus=2, standalone=True, deepspeed=True)
+def test_deepspeed_multiple_models():
+    import deepspeed
+
+    class Lite(LightningLite):
+        def run(self):
+            model = BoringModel()
+            optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
+            model_parameters = filter(lambda p: p.requires_grad, model.parameters())
+            deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
+                model=model,
+                model_parameters=model_parameters,  # type: ignore
+                optimizer=optimizer,
+                dist_init_required=False,
+                config={'activation_checkpointing': {'contiguous_memory_optimization': False,
+                                                     'cpu_checkpointing': False,
+                                                     'partition_activations': False,
+                                                     'synchronize_checkpoint_boundary': False},
+                        'aio': {'block_size': 1048576,
+                                'overlap_events': True,
+                                'queue_depth': 8,
+                                'single_submit': False,
+                                'thread_count': 1},
+                        'train_micro_batch_size_per_gpu': 1,
+                        'zero_allow_untested_optimizer': True,
+                        'zero_optimization': {'allgather_bucket_size': 200000000,
+                                              'allgather_partitions': True,
+                                              'contiguous_gradients': True,
+                                              'overlap_comm': True,
+                                              'reduce_bucket_size': 200000000,
+                                              'reduce_scatter': True,
+                                              'stage': 3,
+                                              'sub_group_size': 1000000000000}}
+            )
+
+
+    Lite(strategy=DeepSpeedStrategy(stage=3, logging_batch_size_per_gpu=1), devices=2, accelerator="gpu").run()
+
+
+
+
 def worker(rank):
     os.environ["MASTER_ADDR"] = "localhost"
     os.environ["MASTER_PORT"] = "12234"
@@ -437,23 +479,8 @@ def worker(rank):
 
 
 @RunIf(min_cuda_gpus=2, standalone=True, deepspeed=True)
-def test_deepspeed_multiple_models():
-
-
-
-
-
-    # torch.distributed
+def test_deepspeed_multiple_models_1():
     torch.multiprocessing.spawn(worker, nprocs=2)
-
-    # class Lite(LightningLite):
-    #     def run(self):
-    #
-    #
-    #
-    # Lite(strategy=DeepSpeedStrategy(stage=3, logging_batch_size_per_gpu=1), devices=2, accelerator="gpu").run()
-
-
 
 
 @RunIf(min_cuda_gpus=2, standalone=True, deepspeed=True)
