@@ -60,12 +60,12 @@ def worker(rank):
 
     with model_parallel_context:
         model = TheModel()
-        optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
+        # optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
         deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
             args=argparse.Namespace(device_rank=rank),
             model=model,
             model_parameters=model.parameters(),
-            optimizer=optimizer,
+            # optimizer=optimizer,
             dist_init_required=False,
             config=config,
         )
