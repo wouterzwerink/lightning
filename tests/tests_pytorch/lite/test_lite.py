@@ -406,15 +406,21 @@ def test_autocast():
 def test_deepspeed_multiple_models():
     import deepspeed
 
-    model = BoringModel()
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
-    model_parameters = filter(lambda p: p.requires_grad, model.parameters())
-    deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
-        model=model,
-        model_parameters=model_parameters,  # type: ignore
-        optimizer=optimizer,
-        dist_init_required=False,
-    )
+    def worker(rank):
+        torch.distributed.init_process_group(backend="gloo", world_size=2, rank=rank)
+        model = BoringModel()
+        optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
+        model_parameters = filter(lambda p: p.requires_grad, model.parameters())
+        deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
+            model=model,
+            model_parameters=model_parameters,  # type: ignore
+            optimizer=optimizer,
+            dist_init_required=False,
+        )
+
+
+    # torch.distributed
+    torch.multiprocessing.spawn(worker, nprocs=2)
 
     # class Lite(LightningLite):
     #     def run(self):
