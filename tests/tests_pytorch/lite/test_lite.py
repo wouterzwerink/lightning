@@ -406,22 +406,19 @@ def test_autocast():
 def test_deepspeed_multiple_models():
     import deepspeed
 
-    class Lite(LightningLite):
-        def run(self):
-            model = BoringModel()
-            optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
-            model_parameters = filter(lambda p: p.requires_grad, model.parameters())
-            deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
-                # args=argparse.Namespace(device_rank=self_stra.root_device.index),
-                # config=self.config,
-                model=model,
-                model_parameters=model_parameters,  # type: ignore
-                optimizer=optimizer,
-                # lr_scheduler=lr_scheduler,
-                dist_init_required=False,
-            )
-            # return deepspeed_engine, deepspeed_optimizer
-            # self._strategy._setup_model_and_optimizers(model, [optimizer])
+    model = BoringModel()
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
+    model_parameters = filter(lambda p: p.requires_grad, model.parameters())
+    deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
+        model=model,
+        model_parameters=model_parameters,  # type: ignore
+        optimizer=optimizer,
+        dist_init_required=False,
+    )
 
-
-    Lite(strategy=DeepSpeedStrategy(stage=3, logging_batch_size_per_gpu=1), devices=2, accelerator="gpu").run()
+    # class Lite(LightningLite):
+    #     def run(self):
+    #
+    #
+    #
+    # Lite(strategy=DeepSpeedStrategy(stage=3, logging_batch_size_per_gpu=1), devices=2, accelerator="gpu").run()
