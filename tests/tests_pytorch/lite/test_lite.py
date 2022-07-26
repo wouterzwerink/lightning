@@ -428,7 +428,7 @@ def worker(rank):
     os.environ["MASTER_PORT"] = "12234"
     os.environ["LOCAL_RANK"] = str(rank)
     import deepspeed
-    deepspeed.init_process_group(backend="gloo", world_size=2, rank=rank)
+    deepspeed.init_distributed(backend="gloo", world_size=2, rank=rank)
     model = BoringModel()
     optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
     model_parameters = filter(lambda p: p.requires_grad, model.parameters())
