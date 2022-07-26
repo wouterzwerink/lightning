@@ -1,65 +1,37 @@
-import os
-
+import deepspeed
 import torch
-from torch.utils.data import DataLoader, Dataset
 
-from pytorch_lightning import LightningModule, Trainer
-
-
-class RandomDataset(Dataset):
-    def __init__(self, size, length):
-        self.len = length
-        self.data = torch.randn(length, size)
-
-    def __getitem__(self, index):
-        return self.data[index]
-
-    def __len__(self):
-        return self.len
+from pytorch_lightning.lite import LightningLite
+from pytorch_lightning.strategies import DeepSpeedStrategy
 
 
-class BoringModel(LightningModule):
+class BoringModel(nn.Module):
     def __init__(self):
         super().__init__()
-        self.layer = torch.nn.Linear(32, 2)
+        self.layer = torch.nn.Linear(32, 2, bias=False)
 
     def forward(self, x):
-        return self.layer(x)
+        x = self.layer(x)
+        return torch.nn.functional.mse_loss(x, torch.ones_like(x))
 
-    def training_step(self, batch, batch_idx):
-        loss = self(batch).sum()
-        self.log("train_loss", loss)
-        return {"loss": loss}
-
-    def validation_step(self, batch, batch_idx):
-        loss = self(batch).sum()
-        self.log("valid_loss", loss)
-
-    def test_step(self, batch, batch_idx):
-        loss = self(batch).sum()
-        self.log("test_loss", loss)
-
-    def configure_optimizers(self):
-        return torch.optim.SGD(self.layer.parameters(), lr=0.1)
 
 
 def run():
-    train_data = DataLoader(RandomDataset(32, 64), batch_size=2)
-    val_data = DataLoader(RandomDataset(32, 64), batch_size=2)
-    test_data = DataLoader(RandomDataset(32, 64), batch_size=2)
+    class Lite(LightningLite):
+        def run(self):
+            model = BoringModel()
+            optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
+            model_parameters = filter(lambda p: p.requires_grad, model.parameters())
+            deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
+                model=model,
+                model_parameters=model_parameters,
+                optimizer=optimizer,
+                dist_init_required=False,
+            )
 
-    model = BoringModel()
-    trainer = Trainer(
-        default_root_dir=os.getcwd(),
-        limit_train_batches=1,
-        limit_val_batches=1,
-        limit_test_batches=1,
-        num_sanity_val_steps=0,
-        max_epochs=1,
-        enable_model_summary=False,
-    )
-    trainer.fit(model, train_dataloaders=train_data, val_dataloaders=val_data)
-    trainer.test(model, dataloaders=test_data)
+
+    Lite(strategy=DeepSpeedStrategy(stage=3, logging_batch_size_per_gpu=1), devices=2, accelerator="gpu").run()
+
 
 
 if __name__ == "__main__":
