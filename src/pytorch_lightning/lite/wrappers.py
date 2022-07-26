@@ -81,6 +81,7 @@ class _LiteModule(DeviceDtypeModuleMixin):
                 on this wrapper should pass through to the original module.
         """
         super().__init__()
+
         self._forward_module = forward_module
         self._original_module = original_module or forward_module
         self._precision_plugin = precision_plugin
@@ -115,16 +116,18 @@ class _LiteModule(DeviceDtypeModuleMixin):
         return output
 
     def __getattr__(self, item: Any) -> Any:
-        if item == "_ds_child_entered":
-            breakpoint()
         try:
-            # __getattr__ gets called as a last resort if the attribute does not exist
-            # call nn.Module's implementation first
-            return super().__getattr__(item)
-        except AttributeError:
-            # If the attribute is not available on the _LiteModule wrapper, redirect to the wrapped nn.Module
-            original_module = super().__getattr__("_original_module")
-            return getattr(original_module, item)
+
+            try:
+                # __getattr__ gets called as a last resort if the attribute does not exist
+                # call nn.Module's implementation first
+                return super().__getattr__(item)
+            except AttributeError:
+                # If the attribute is not available on the _LiteModule wrapper, redirect to the wrapped nn.Module
+                original_module = super().__getattr__("_original_module")
+                return getattr(original_module, item)
+        except RecursionError:
+            print("Here")
 
 
 class _LiteDataLoader:
