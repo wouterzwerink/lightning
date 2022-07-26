@@ -6,7 +6,7 @@ from pytorch_lightning.lite import LightningLite
 from pytorch_lightning.strategies import DeepSpeedStrategy
 
 
-class BoringModel(nn.Module):
+class TheModel(nn.Module):
     def __init__(self):
         super().__init__()
         self.layer = torch.nn.Linear(32, 2, bias=False)
@@ -20,7 +20,7 @@ class BoringModel(nn.Module):
 def run():
     class Lite(LightningLite):
         def run(self):
-            model = BoringModel()
+            model = TheModel()
             optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
             model_parameters = filter(lambda p: p.requires_grad, model.parameters())
             deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
