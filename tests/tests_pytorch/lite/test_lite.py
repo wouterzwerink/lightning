@@ -403,6 +403,7 @@ def test_autocast():
 def worker(rank):
     os.environ["MASTER_ADDR"] = "localhost"
     os.environ["MASTER_PORT"] = "12234"
+    os.environ["LOCAL_RANK"] = str(rank)
     import deepspeed
     torch.distributed.init_process_group(backend="gloo", world_size=2, rank=rank)
     model = BoringModel()
