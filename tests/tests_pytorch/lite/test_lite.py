@@ -27,7 +27,7 @@ from pytorch_lightning.lite import LightningLite
 from pytorch_lightning.lite.wrappers import _LiteDataLoader, _LiteModule, _LiteOptimizer
 from pytorch_lightning.plugins import PrecisionPlugin
 from pytorch_lightning.strategies import DeepSpeedStrategy, Strategy
-from pytorch_lightning.utilities import _StrategyType
+from pytorch_lightning.utilities import _StrategyType, argparse
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from pytorch_lightning.utilities.seed import pl_worker_init_function
 from tests_pytorch.helpers.runif import RunIf
@@ -433,6 +433,7 @@ def worker(rank):
     optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
     model_parameters = filter(lambda p: p.requires_grad, model.parameters())
     deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
+        args=argparse.Namespace(device_rank=rank),
         model=model,
         model_parameters=model_parameters,  # type: ignore
         optimizer=optimizer,
