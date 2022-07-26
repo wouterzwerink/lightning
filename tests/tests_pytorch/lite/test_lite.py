@@ -400,23 +400,25 @@ def test_autocast():
     lite._precision_plugin.forward_context().__exit__.assert_called()
 
 
+def worker(rank):
+    import deepspeed
+    torch.distributed.init_process_group(backend="gloo", world_size=2, rank=rank)
+    model = BoringModel()
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
+    model_parameters = filter(lambda p: p.requires_grad, model.parameters())
+    deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
+        model=model,
+        model_parameters=model_parameters,  # type: ignore
+        optimizer=optimizer,
+        dist_init_required=False,
+    )
 
 
 @RunIf(min_cuda_gpus=2, standalone=True, deepspeed=True)
 def test_deepspeed_multiple_models():
-    import deepspeed
 
-    def worker(rank):
-        torch.distributed.init_process_group(backend="gloo", world_size=2, rank=rank)
-        model = BoringModel()
-        optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
-        model_parameters = filter(lambda p: p.requires_grad, model.parameters())
-        deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
-            model=model,
-            model_parameters=model_parameters,  # type: ignore
-            optimizer=optimizer,
-            dist_init_required=False,
-        )
+
+
 
 
     # torch.distributed
