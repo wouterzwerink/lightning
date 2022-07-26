@@ -54,7 +54,7 @@ def worker(rank):
     deepspeed.init_distributed()
 
     model_parallel_context = deepspeed.zero.Init(
-        remote_device="nvme", pin_memory=True, config_dict_or_path=config, dtype=torch.float32
+        remote_device="cpu", pin_memory=True, config_dict_or_path=config, dtype=torch.float32
     )
 
     with model_parallel_context:
