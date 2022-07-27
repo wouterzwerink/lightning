@@ -28,7 +28,7 @@ def run():
         enable_progress_bar=False,
         enable_model_summary=False,
         track_grad_norm=1,
-        accelerator="gpu", devices=2, precision=16, strategy="deepspeed"
+        accelerator="gpu", devices=1, strategy="deepspeed"
     )
     trainer.fit(model)
 
