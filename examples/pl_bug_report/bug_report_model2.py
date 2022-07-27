@@ -57,7 +57,7 @@ def worker(rank):
     with model_parallel_context:
         model = TheModel()
 
-    # If the context only goes over the model, no error occurs (unindent the lines below)
+        # If the context only goes over the model, no error occurs (unindent the lines below)
         deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
             args=argparse.Namespace(device_rank=rank),
             model=model,

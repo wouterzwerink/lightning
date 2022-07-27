@@ -15,27 +15,29 @@ class TheModel(nn.Module):
         return self.layer(x)
 
 
-config = {'activation_checkpointing': {'contiguous_memory_optimization': False,
-                              'cpu_checkpointing': False,
-                              'partition_activations': False,
-                              'synchronize_checkpoint_boundary': False},
- 'aio': {'block_size': 1048576,
-         'overlap_events': True,
-         'queue_depth': 8,
-         'single_submit': False,
-         'thread_count': 1},
- 'gradient_accumulation_steps': 1,
- 'gradient_clipping': 0.0,
- 'train_micro_batch_size_per_gpu': 1,
- 'zero_allow_untested_optimizer': True,
- 'zero_optimization': {'allgather_bucket_size': 200000000,
-                       'allgather_partitions': True,
-                       'contiguous_gradients': True,
-                       'overlap_comm': True,
-                       'reduce_bucket_size': 200000000,
-                       'reduce_scatter': True,
-                       'stage': 2,
-                       'sub_group_size': 1000000000000}}
+config = {
+    "activation_checkpointing": {
+        "contiguous_memory_optimization": False,
+        "cpu_checkpointing": False,
+        "partition_activations": False,
+        "synchronize_checkpoint_boundary": False,
+    },
+    "aio": {"block_size": 1048576, "overlap_events": True, "queue_depth": 8, "single_submit": False, "thread_count": 1},
+    "gradient_accumulation_steps": 1,
+    "gradient_clipping": 0.0,
+    "train_micro_batch_size_per_gpu": 1,
+    "zero_allow_untested_optimizer": True,
+    "zero_optimization": {
+        "allgather_bucket_size": 200000000,
+        "allgather_partitions": True,
+        "contiguous_gradients": True,
+        "overlap_comm": True,
+        "reduce_bucket_size": 200000000,
+        "reduce_scatter": True,
+        "stage": 2,
+        "sub_group_size": 1000000000000,
+    },
+}
 
 
 def worker(rank):
