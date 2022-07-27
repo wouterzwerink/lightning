@@ -38,7 +38,7 @@ class TestModel(BoringModel):
         print("debug", batch_idx, opt, self.layer.weight.grad)
         # self.manual_backward(loss)
         # self.trainer.model.backward(loss)
-        self.trainer.precision_plugin.backward(self, loss, None)
+        self.trainer.precision_plugin.backward(self.trainer.lightning_module, loss, None)
         self.trainer.strategy.model.step()
         # opt.step()
         # opt.zero_grad()
