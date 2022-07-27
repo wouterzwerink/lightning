@@ -1,3 +1,5 @@
+from deepspeed import DeepSpeedEngine
+
 from pytorch_lightning import Trainer
 from pytorch_lightning.demos.boring_classes import BoringDataModule, BoringModel, RandomDataset
 from pytorch_lightning.plugins import DeepSpeedPrecisionPlugin
@@ -40,7 +42,8 @@ class TestModel(BoringModel):
         # self.manual_backward(loss)
         # self.trainer.model.backward(loss)
         assert isinstance(self.trainer.precision_plugin, DeepSpeedPrecisionPlugin)
-        self.trainer.precision_plugin.backward(self.trainer.lightning_module, loss, None)
+        assert isinstance(self.trainer.model, DeepSpeedEngine)
+        self.trainer.precision_plugin.backward(self, loss, None)
         self.trainer.strategy.model.step()
         # opt.step()
         # opt.zero_grad()
