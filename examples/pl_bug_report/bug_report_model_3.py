@@ -10,10 +10,11 @@ class TestModel(BoringModel):
     def training_step(self, batch, batch_idx):
         loss = self.step(batch[0])
         opt = self.optimizers()
-        opt.zero_grad()
+        # opt.zero_grad()
         print("debug", batch_idx, opt, self.layer.weight.grad)
         self.manual_backward(loss)
         opt.step()
+        opt.zero_grad()
         return {"loss": loss}
 
 def run():
