@@ -38,7 +38,6 @@ config = {'activation_checkpointing': {'contiguous_memory_optimization': False,
                        'sub_group_size': 1000000000000}}
 
 
-
 def worker(rank):
     os.environ["MASTER_ADDR"] = "localhost"
     os.environ["MASTER_PORT"] = "12234"
@@ -47,17 +46,16 @@ def worker(rank):
     os.environ["LOCAL_RANK"] = str(rank)
     deepspeed.init_distributed()
 
-    model_parallel_context = deepspeed.zero.Init(
-        remote_device="cpu", pin_memory=True, config_dict_or_path=config, dtype=torch.float32
-    )
-    with model_parallel_context:
-        model = TheModel()
+    # model_parallel_context = deepspeed.zero.Init(
+    #     remote_device="cpu", pin_memory=True, config_dict_or_path=config, dtype=torch.float32
+    # )
+    # with model_parallel_context:
+    model = TheModel()
 
     optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
     deepspeed_engine, deepspeed_optimizer, _, _ = deepspeed.initialize(
         args=argparse.Namespace(device_rank=rank),
         model=model,
-        # model_parameters=model.parameters(),
         optimizer=optimizer,
         dist_init_required=False,
         config=config,
