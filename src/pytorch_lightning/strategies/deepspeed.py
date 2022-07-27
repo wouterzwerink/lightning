@@ -537,8 +537,9 @@ class DeepSpeedStrategy(DDPStrategy):
         else:
             model_parallel_context = super().model_sharded_context()
 
-        with model_parallel_context:
-            yield
+        print("shard context", model_parallel_context, "disabled")
+        # with model_parallel_context:
+        yield
 
     def _set_deepspeed_activation_checkpointing(self):
         if self.config.get("activation_checkpointing"):
