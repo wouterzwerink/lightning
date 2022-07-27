@@ -57,7 +57,7 @@ def run():
         max_epochs=1,
         limit_train_batches=train_batches,
         limit_val_batches=val_batches,
-        enable_progress_bar=False,
+        enable_progress_bar=True,
         enable_model_summary=False,
         track_grad_norm=1,
         accelerator="gpu",
