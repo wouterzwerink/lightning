@@ -14,7 +14,7 @@ class TestModel(BoringModel):
         self.manual_backward(loss)
         opt.step()
         return {"loss": loss}
-    
+
 def run():
 
 
@@ -32,3 +32,7 @@ def run():
         accelerator="gpu", devices=1, precision=16, strategy="deepspeed"
     )
     trainer.fit(model)
+
+
+if __name__ == "__main__":
+    run()
