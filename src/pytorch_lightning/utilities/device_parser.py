@@ -15,7 +15,6 @@ import multiprocessing
 from typing import Any, List, MutableSequence, Optional, Tuple, Union
 
 import torch
-import torch.cuda
 
 from pytorch_lightning.plugins.environments import TorchElasticEnvironment
 from pytorch_lightning.tuner.auto_gpu_select import pick_multiple_gpus
@@ -340,6 +339,8 @@ def num_cuda_devices() -> int:
     Unlike :func:`torch.cuda.device_count`, this function will do its best not to create a CUDA context for fork
     support, if the platform allows it.
     """
+    import torch.cuda
+
     if "fork" not in torch.multiprocessing.get_all_start_methods():
         return torch.cuda.device_count()
     with multiprocessing.get_context("fork").Pool(1) as pool:
@@ -352,6 +353,7 @@ def is_cuda_available() -> bool:
     Unlike :func:`torch.cuda.is_available`, this function will do its best not to create a CUDA context for fork
     support, if the platform allows it.
     """
+    import torch.cuda
     if "fork" not in torch.multiprocessing.get_all_start_methods():
         return torch.cuda.is_available()
     with multiprocessing.get_context("fork").Pool(1) as pool:

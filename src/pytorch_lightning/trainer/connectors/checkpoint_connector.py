@@ -115,7 +115,7 @@ class CheckpointConnector:
         self._loaded_checkpoint = {}
 
         # clear cache after restore
-        torch.cuda.empty_cache()
+        # torch.cuda.empty_cache()
 
         # wait for all to catch up
         self.trainer.strategy.barrier("CheckpointConnector.resume_end")

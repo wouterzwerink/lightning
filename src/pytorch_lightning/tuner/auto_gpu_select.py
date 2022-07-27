@@ -56,7 +56,7 @@ def pick_single_gpu(exclude_gpus: List[int]) -> int:
         if i in exclude_gpus:
             continue
 
-        if torch.cuda.memory_reserved(f"cuda:{i}") > 0:
+        if False:
             previously_used_gpus.append(i)
         else:
             unused_gpus.append(i)

@@ -328,7 +328,7 @@ class Strategy(ABC):
         return unwrap_lightning_module(self.model) if self.model is not None else None
 
     def load_checkpoint(self, checkpoint_path: _PATH) -> Dict[str, Any]:
-        torch.cuda.empty_cache()
+        # torch.cuda.empty_cache()
         return self.checkpoint_io.load_checkpoint(checkpoint_path)
 
     def load_model_state_dict(self, checkpoint: Mapping[str, Any]) -> None:
