@@ -4,6 +4,8 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 
 from pytorch_lightning import LightningModule, Trainer
+from pytorch_lightning.lite import LightningLite
+from pytorch_lightning.strategies import DeepSpeedStrategy
 
 
 class RandomDataset(Dataset):
@@ -63,4 +65,8 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    class Lite(LightningLite):
+        def run(self):
+            pass
+
+    Lite(accelerator="cpu", devices=2, strategy=DeepSpeedStrategy(stage=3))
