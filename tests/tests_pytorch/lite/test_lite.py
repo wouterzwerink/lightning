@@ -401,8 +401,8 @@ def test_autocast():
     lite._precision_plugin.forward_context().__exit__.assert_called()
 
 
-# https://github.com/microsoft/DeepSpeed/issues/2139
-@pytest.mark.skipif(_RequirementAvailable("deepspeed>=0.6.5"), reason="Lite does not support 0.6.5")
+# # https://github.com/microsoft/DeepSpeed/issues/2139
+# @pytest.mark.skipif(_RequirementAvailable("deepspeed>=0.6.5"), reason="Lite does not support 0.6.5")
 @RunIf(min_cuda_gpus=2, standalone=True, deepspeed=True)
 def test_deepspeed_multiple_models():
     class Lite(LightningLite):
