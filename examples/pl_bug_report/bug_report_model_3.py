@@ -11,7 +11,7 @@ class TestModel(BoringModel):
         loss = self.step(batch[0])
         opt = self.optimizers()
         opt.zero_grad()
-        print(self.layer.weight.grad)
+        print("debug", batch_idx, opt, self.layer.weight.grad)
         self.manual_backward(loss)
         opt.step()
         return {"loss": loss}
