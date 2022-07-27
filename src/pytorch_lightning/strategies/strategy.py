@@ -176,7 +176,7 @@ class Strategy(ABC):
         """
         self.pre_backward(closure_loss)
         assert self.lightning_module is not None
-        closure_loss = self.precision_plugin.pre_backward(self.lightning_module, closure_loss)
+        # closure_loss = self.precision_plugin.pre_backward(self.lightning_module, closure_loss)
 
         self.precision_plugin.backward(self.lightning_module, closure_loss, *args, **kwargs)
 
