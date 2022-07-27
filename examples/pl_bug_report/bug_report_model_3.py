@@ -1,5 +1,6 @@
 from pytorch_lightning import Trainer
 from pytorch_lightning.demos.boring_classes import BoringDataModule, BoringModel, RandomDataset
+from pytorch_lightning.plugins import DeepSpeedPrecisionPlugin
 
 config = {
     "activation_checkpointing": {
@@ -38,6 +39,7 @@ class TestModel(BoringModel):
         print("debug", batch_idx, opt, self.layer.weight.grad)
         # self.manual_backward(loss)
         # self.trainer.model.backward(loss)
+        assert isinstance(self.trainer.precision_plugin, DeepSpeedPrecisionPlugin)
         self.trainer.precision_plugin.backward(self.trainer.lightning_module, loss, None)
         self.trainer.strategy.model.step()
         # opt.step()
