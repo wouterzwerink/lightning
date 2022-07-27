@@ -36,9 +36,11 @@ class TestModel(BoringModel):
         opt = self.optimizers()
         # opt.zero_grad()
         print("debug", batch_idx, opt, self.layer.weight.grad)
-        self.manual_backward(loss)
-        opt.step()
-        opt.zero_grad()
+        # self.manual_backward(loss)
+        self.trainer.strategy.model.backward(loss)
+        self.trainer.strategy.model.step()
+        # opt.step()
+        # opt.zero_grad()
         return {"loss": loss}
 
 
