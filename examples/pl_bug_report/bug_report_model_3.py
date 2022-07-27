@@ -39,12 +39,12 @@ class TestModel(BoringModel):
         opt = self.optimizers()
         assert isinstance(self.trainer.precision_plugin, DeepSpeedPrecisionPlugin)
         assert isinstance(self.trainer.model, DeepSpeedEngine)
-        # self.manual_backward(loss)
+        self.manual_backward(loss)
         # opt.zero_grad()
-        self.trainer.model.backward(loss)
+        # self.trainer.model.backward(loss)
         # self.trainer.precision_plugin.backward(self, loss, None)
-        self.trainer.model.step()
-        # opt.step()
+        # self.trainer.model.step()
+        opt.step()
         # opt.zero_grad()
         return {"loss": loss}
 
