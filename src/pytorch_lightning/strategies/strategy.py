@@ -180,7 +180,7 @@ class Strategy(ABC):
 
         self.precision_plugin.backward(self.lightning_module, closure_loss, *args, **kwargs)
 
-        closure_loss = self.precision_plugin.post_backward(self.lightning_module, closure_loss)
+        # closure_loss = self.precision_plugin.post_backward(self.lightning_module, closure_loss)
         self.post_backward(closure_loss)
 
         return closure_loss
