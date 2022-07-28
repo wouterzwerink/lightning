@@ -16,18 +16,8 @@ set -e
 # THIS FILE ASSUMES IT IS RUN INSIDE THE tests/tests_pytorch DIRECTORY
 
 # Batch size for testing: Determines how many standalone test invocations run in parallel
-test_batch_size=6
+test_batch_size=1
 
-while getopts "b:" opt; do
-    case $opt in
-        b)
-            test_batch_size=$OPTARG;;
-        *)
-            echo "Usage: $(basename $0) [-b batch_size]"
-            exit 1;;
-    esac
-done
-shift $((OPTIND-1))
 
 # this environment variable allows special tests to run
 export PL_RUN_STANDALONE_TESTS=1
