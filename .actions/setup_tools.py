@@ -79,6 +79,9 @@ def _parse_requirements(strs: Iterable) -> Iterator[_RequirementWithComment]:
         if line.startswith("--"):
             pip_argument = line
             continue
+        if line.startswith("-r "):
+            # linked requirement files are unsupported
+            continue
         yield _RequirementWithComment(line, comment=comment, pip_argument=pip_argument)
         pip_argument = None
 
