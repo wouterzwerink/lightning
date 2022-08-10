@@ -122,9 +122,7 @@ class DeviceDtypeModuleMixin(Module):
         Returns:
             Module: self
         """
-        if device is None:
-            device = torch.device("cuda", torch.cuda.current_device())
-        elif isinstance(device, int):
+        if device is None or isinstance(device, int):
             device = torch.device("cuda", index=device)
         self.__update_properties(device=device)
         return super().cuda(device=device)
