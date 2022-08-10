@@ -460,18 +460,28 @@ def _download_frontend(root: str = _PROJECT_ROOT):
         print("The Lightning UI downloading has failed!")
 
 
-def _adjust_require_versions(source_dir: str = "src", req_dir: str = "requirements") -> None:
-    """Parse the base requirements and append  as version adjustments if needed `pkg>=X1.Y1.Z1,==X2.Y2.*`."""
-    reqs = load_requirements(req_dir)
-    for i, pkg_name in enumerate(reqs):
-        ver = parse_version_from_file(os.path.join(source_dir, pkg_name.replace("-", "_")))
+def _adjust_require_versions(source_dir: str = "src", req_dir: str = "requirements") -> List[str]:
+    """Parse the base requirements and adjust the pinned version.
+
+    >>> source_dir = os.path.join(_PROJECT_ROOT, "src")
+    >>> req_dir = os.path.join(_PROJECT_ROOT, "requirements")
+    >>> _adjust_require_versions(source_dir=source_dir, req_dir=req_dir)  # doctest: +ELLIPSIS
+    ['pytorch-lightning==...', 'lightning-app==...']
+    """
+    pinned_reqs = []
+    for req in load_requirements(req_dir):
+        pkg_name = req.replace("-", "_")
+        ver = parse_version_from_file(os.path.join(source_dir, pkg_name))
         if not ver:
             raise ValueError(f"Expected a version for package: {pkg_name}")
         ver_values = ver.split(".")
         ver_values[2:] = "*"
-        reqs[i] = f"{pkg_name}=={'.'.join(ver_values)}"
+        pinned_reqs.append(f"{req}=={'.'.join(ver_values)}")
+    return pinned_reqs
 
-    with open(os.path.join(req_dir, "base.txt"), "w") as fp:
+
+def _write_requirements(reqs: List[str], req_dir: str = "requirements", req_filename: str = "base.txt") -> None:
+    with open(os.path.join(req_dir, req_filename), "w") as fp:
         fp.writelines([ln + os.linesep for ln in reqs])
 
 
@@ -483,8 +493,7 @@ def _load_aggregate_requirements(req_dir: str = "requirements", freeze_requireme
         if os.path.isdir(d)
     ]
     if not requires:
-        return None
+        return
     # TODO: add some smarter version aggregation per each package
     requires = list(chain(*requires))
-    with open(os.path.join(req_dir, "base.txt"), "w") as fp:
-        fp.writelines([ln + os.linesep for ln in requires])
+    _write_requirements(requires, req_dir=req_dir)
