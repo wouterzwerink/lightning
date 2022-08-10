@@ -346,14 +346,13 @@ def wrap_try_except(body: List[str], pkg: str, ver: str) -> List[str]:
 def parse_version_from_file(pkg_root: str) -> str:
     """Loading the package version from file."""
     file_ver = os.path.join(pkg_root, "__version__.py")
-    file_about = os.path.join(pkg_root, "__about__.py")
     if os.path.isfile(file_ver):
-        ver = _load_py_module("version", file_ver).version
-    elif os.path.isfile(file_about):
-        ver = _load_py_module("about", file_about).__version__
-    else:  # this covers case you have build only meta-package so not additional source files are present
-        ver = ""
-    return ver
+        return _load_py_module("version", file_ver).version
+    file_about = os.path.join(pkg_root, "__about__.py")
+    if os.path.isfile(file_about):
+        return _load_py_module("about", file_about).__version__
+    # this covers case you have build only meta-package so not additional source files are present
+    return ""
 
 
 def prune_duplicate_lines(body):
@@ -463,14 +462,14 @@ def _download_frontend(root: str = _PROJECT_ROOT):
 
 def _adjust_require_versions(source_dir: str = "src", req_dir: str = "requirements") -> None:
     """Parse the base requirements and append  as version adjustments if needed `pkg>=X1.Y1.Z1,==X2.Y2.*`."""
-    reqs = load_requirements(req_dir, file_name="base.txt", unfreeze=False)
-    for i, req in enumerate(reqs):
-        pkg_name = req[: min(req.index(c) for c in ">=" if c in req)]
-        ver_ = parse_version_from_file(os.path.join(source_dir, pkg_name))
-        if not ver_:
-            continue
-        ver2 = ".".join(ver_.split(".")[:2] + ["*"])
-        reqs[i] = f"{req}, =={ver2}"
+    reqs = load_requirements(req_dir)
+    for i, pkg_name in enumerate(reqs):
+        ver = parse_version_from_file(os.path.join(source_dir, pkg_name.replace("-", "_")))
+        if not ver:
+            raise ValueError(f"Expected a version for package: {pkg_name}")
+        ver_values = ver.split(".")
+        ver_values[2:] = "*"
+        reqs[i] = f"{pkg_name}=={'.'.join(ver_values)}"
 
     with open(os.path.join(req_dir, "base.txt"), "w") as fp:
         fp.writelines([ln + os.linesep for ln in reqs])
@@ -479,7 +478,7 @@ def _adjust_require_versions(source_dir: str = "src", req_dir: str = "requiremen
 def _load_aggregate_requirements(req_dir: str = "requirements", freeze_requirements: bool = False) -> None:
     """Load all base requirements from all particular packages and prune duplicates."""
     requires = [
-        load_requirements(d, file_name="base.txt", unfreeze=not freeze_requirements)
+        load_requirements(d, unfreeze=not freeze_requirements)
         for d in glob.glob(os.path.join(req_dir, "*"))
         if os.path.isdir(d)
     ]
