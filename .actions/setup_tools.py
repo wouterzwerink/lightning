@@ -103,7 +103,7 @@ def load_readme_description(path_dir: str, homepage: str, version: str) -> str:
     """Load readme as decribtion.
 
     >>> load_readme_description(_PROJECT_ROOT, "", "")  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    '<div align="center">...'
+    '...PyTorch Lightning is just organized PyTorch...'
     """
     path_readme = os.path.join(path_dir, "README.md")
     text = open(path_readme, encoding="utf-8").read()
