@@ -473,7 +473,7 @@ def _adjust_require_versions(source_dir: str = "src", req_dir: str = "requiremen
         pkg_name = req.replace("-", "_")
         ver = parse_version_from_file(os.path.join(source_dir, pkg_name))
         if not ver:
-            raise ValueError(f"Expected a version for package: {pkg_name}")
+            continue
         ver_values = ver.split(".")
         ver_values[2:] = "*"
         pinned_reqs.append(f"{req}=={'.'.join(ver_values)}")
