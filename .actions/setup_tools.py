@@ -53,8 +53,10 @@ class _RequirementWithComment(pkg_resources.Requirement):
         self.strict = "# strict" in comment.lower()
 
     def clean_str(self, unfreeze: bool) -> str:
-        # remove version restrictions unless they are strict
-        return self.project_name if unfreeze and not self.strict else str(self)
+        """Remove version restrictions unless they are strict."""
+        if self.strict:
+            return f"{self!s} # strict"
+        return self.project_name if unfreeze else str(self)
 
 
 def _parse_requirements(strs: Iterable) -> Iterator[_RequirementWithComment]:
