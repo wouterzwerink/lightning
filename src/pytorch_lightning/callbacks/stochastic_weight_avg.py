@@ -27,7 +27,7 @@ from pytorch_lightning.callbacks.callback import Callback
 from pytorch_lightning.strategies import DDPFullyShardedStrategy, DeepSpeedStrategy
 from pytorch_lightning.strategies.fully_sharded_native import DDPFullyShardedNativeStrategy
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
-from pytorch_lightning.utilities.rank_zero import rank_zero_info, rank_zero_warn
+from lightning_lite.utilities.rank_zero import rank_zero_info, rank_zero_warn
 from pytorch_lightning.utilities.types import _LRScheduler, LRSchedulerConfig
 
 _AVG_FN = Callable[[Tensor, Tensor, Tensor], Tensor]

@@ -15,7 +15,7 @@
 import warnings
 from typing import Any
 
-from pytorch_lightning.utilities.rank_zero import (
+from lightning_lite.utilities.rank_zero import (
     LightningDeprecationWarning,
     rank_zero_deprecation,
     rank_zero_info,

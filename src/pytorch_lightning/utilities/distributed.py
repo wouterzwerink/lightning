@@ -23,8 +23,8 @@ from torch.nn.parallel.distributed import DistributedDataParallel
 
 import pytorch_lightning as pl
 from pytorch_lightning.utilities.imports import _HPU_AVAILABLE, _TPU_AVAILABLE
-from pytorch_lightning.utilities.rank_zero import rank_zero_only  # noqa: F401
-from pytorch_lightning.utilities.rank_zero import rank_zero_debug, rank_zero_deprecation, rank_zero_info
+from lightning_lite.utilities.rank_zero import rank_zero_only  # noqa: F401
+from lightning_lite.utilities.rank_zero import rank_zero_debug, rank_zero_deprecation, rank_zero_info
 
 if _TPU_AVAILABLE:
     import torch_xla.core.xla_model as xm

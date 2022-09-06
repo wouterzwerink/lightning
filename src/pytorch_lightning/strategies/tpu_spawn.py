@@ -38,7 +38,7 @@ from pytorch_lightning.utilities.data import has_len
 from pytorch_lightning.utilities.distributed import ReduceOp
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from pytorch_lightning.utilities.optimizer import optimizers_to_device
-from pytorch_lightning.utilities.rank_zero import rank_zero_only
+from lightning_lite.utilities.rank_zero import rank_zero_only
 from pytorch_lightning.utilities.types import _PATH, EVAL_DATALOADERS, STEP_OUTPUT, TRAIN_DATALOADERS
 
 if _TPU_AVAILABLE:

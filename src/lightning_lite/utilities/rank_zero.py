@@ -20,7 +20,6 @@ from functools import partial, wraps
 from platform import python_version
 from typing import Any, Callable, Optional, Union
 
-import pytorch_lightning as pl
 
 log = logging.getLogger(__name__)
 

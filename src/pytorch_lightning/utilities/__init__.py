@@ -46,7 +46,7 @@ from pytorch_lightning.utilities.imports import (  # noqa: F401
 )
 from pytorch_lightning.utilities.parameter_tying import find_shared_parameters, set_shared_parameters  # noqa: F401
 from pytorch_lightning.utilities.parsing import AttributeDict, flatten_dict, is_picklable  # noqa: F401
-from pytorch_lightning.utilities.rank_zero import (  # noqa: F401
+from lightning_lite.utilities.rank_zero import (  # noqa: F401
     rank_zero_deprecation,
     rank_zero_info,
     rank_zero_only,

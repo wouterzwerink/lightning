@@ -17,7 +17,7 @@ from unittest import mock
 
 import pytest
 
-from pytorch_lightning.utilities.rank_zero import _get_rank, _rank_prefixed_message
+from lightning_lite.utilities.rank_zero import _get_rank, _rank_prefixed_message
 
 
 @pytest.mark.parametrize(
@@ -39,7 +39,7 @@ def test_rank_zero_known_environment_variables(env_vars, expected):
     with mock.patch.dict(os.environ, env_vars):
         # force module reload to re-trigger the rank_zero_only.rank global computation
         sys.modules.pop("pytorch_lightning.utilities.rank_zero", None)
-        from pytorch_lightning.utilities.rank_zero import rank_zero_only
+        from lightning_lite.utilities.rank_zero import rank_zero_only
 
         @rank_zero_only
         def foo():

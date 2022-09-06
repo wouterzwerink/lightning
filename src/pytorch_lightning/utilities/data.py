@@ -40,7 +40,7 @@ from pytorch_lightning.utilities.auto_restart import CaptureIterableDataset, Cap
 from pytorch_lightning.utilities.enums import _FaultTolerantMode, LightningEnum
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from pytorch_lightning.utilities.meta import _get_all_subclasses
-from pytorch_lightning.utilities.rank_zero import rank_zero_warn
+from lightning_lite.utilities.rank_zero import rank_zero_warn
 from pytorch_lightning.utilities.seed import pl_worker_init_function
 from pytorch_lightning.utilities.warnings import WarningCache
 
