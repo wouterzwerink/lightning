@@ -1,7 +1,7 @@
 import torch
 import torch.multiprocessing as mp
 from lightning_lite.utilities.imports import _TORCH_GREATER_EQUAL_1_13
-from lightning_lite.utilities.device_parser import num_cuda_devices
+from lightning_lite.utilities.device_parser import num_cuda_devices, is_cuda_available
 
 
 def worker(rank):
@@ -14,11 +14,12 @@ def run():
     print("greater than 1.13?", _TORCH_GREATER_EQUAL_1_13)
 
     # old function
-    torch.cuda.device_count()
-    torch.cuda.is_available()
+    # torch.cuda.device_count()
+    # torch.cuda.is_available()
 
     # new function
-    # num_cuda_devices()
+    print("num_cuda_devices:", num_cuda_devices())
+    print("available:", is_cuda_available())
 
     mp.start_processes(worker, nprocs=2, start_method="fork")
 
