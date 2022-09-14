@@ -15,6 +15,7 @@ def run():
 
     # old function
     torch.cuda.device_count()
+    torch.cuda.is_available()
 
     # new function
     # num_cuda_devices()
