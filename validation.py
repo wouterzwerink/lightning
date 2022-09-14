@@ -15,11 +15,11 @@ def run():
 
     # old function
     # torch.cuda.device_count()
-    # torch.cuda.is_available()
+    torch.cuda.is_available()
 
     # new function
-    print("num_cuda_devices:", num_cuda_devices())
-    print("available:", is_cuda_available())
+    # print("num_cuda_devices:", num_cuda_devices())
+    # print("available:", is_cuda_available())
 
     mp.start_processes(worker, nprocs=2, start_method="fork")
 
