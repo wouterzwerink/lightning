@@ -14,8 +14,8 @@ def run():
     print("greater than 1.13?", _TORCH_GREATER_EQUAL_1_13)
 
     # old function
-    # torch.cuda.device_count()
-    torch.cuda.is_available()
+    torch.cuda.device_count()
+    # torch.cuda.is_available()
 
     # new function
     # print("num_cuda_devices:", num_cuda_devices())
