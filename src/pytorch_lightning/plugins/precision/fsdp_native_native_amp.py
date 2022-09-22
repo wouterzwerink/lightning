@@ -14,6 +14,7 @@
 from typing import Any, Optional, Union
 
 import torch
+from typing_extensions import Literal
 
 from lightning_lite.utilities.enums import PrecisionType
 from pytorch_lightning.plugins.precision.native_amp import NativeMixedPrecisionPlugin
@@ -31,7 +32,9 @@ else:
 class FullyShardedNativeNativeMixedPrecisionPlugin(NativeMixedPrecisionPlugin):
     """Native AMP for Fully Sharded Native Training."""
 
-    def __init__(self, precision: Union[str, int], device: str, scaler: Optional[ShardedGradScaler] = None) -> None:
+    def __init__(
+        self, precision: Literal[16, "16", "bf16"], device: str, scaler: Optional[ShardedGradScaler] = None
+    ) -> None:
         if not _TORCH_GREATER_EQUAL_1_12:
             raise MisconfigurationException(
                 "`FullyShardedNativeNativeMixedPrecisionPlugin` is supported from PyTorch v1.12.0 onwards."

@@ -22,7 +22,7 @@ from lightning_lite.plugins.precision.precision import Precision
 class DoublePrecision(Precision):
     """Plugin for training with double (``torch.float64``) precision."""
 
-    precision: int = 64
+    precision: str = "64"
 
     @contextmanager
     def forward_context(self) -> Generator[None, None, None]:

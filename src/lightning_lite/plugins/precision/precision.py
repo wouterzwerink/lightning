@@ -27,7 +27,7 @@ class Precision:
     The class attribute precision must be overwritten in child classes. The default value reflects fp32 training.
     """
 
-    precision: Union[str, int] = 32
+    precision: str = "32"
 
     @contextlib.contextmanager
     def forward_context(self) -> Generator[None, None, None]:

@@ -17,6 +17,7 @@ from typing import Any, Callable, Dict, Generator, Optional, Union
 import torch
 from torch import Tensor
 from torch.optim import LBFGS
+from typing_extensions import Literal
 
 import pytorch_lightning as pl
 from lightning_lite.utilities.types import Steppable
@@ -42,14 +43,15 @@ class NativeMixedPrecisionPlugin(PrecisionPlugin):
     backend = AMPType.NATIVE
 
     def __init__(
-        self, precision: Union[str, int], device: str, scaler: Optional[torch.cuda.amp.GradScaler] = None
+        self, precision: Literal[16, "16", "bf16"], device: str, scaler: Optional[torch.cuda.amp.GradScaler] = None
     ) -> None:
         super().__init__()
+        precision = str(precision)
         if precision == "bf16" and not _TORCH_GREATER_EQUAL_1_10:
             raise MisconfigurationException(
                 "To use bfloat16 with native amp you must install torch greater or equal to 1.10."
             )
-        if scaler is None and precision == 16:
+        if scaler is None and precision == "16":
             scaler = torch.cuda.amp.GradScaler()
         if scaler is not None and precision == "bf16":
             raise MisconfigurationException(f"`precision='bf16'` does not use a scaler, found {scaler}.")

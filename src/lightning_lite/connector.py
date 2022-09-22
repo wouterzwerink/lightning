@@ -58,6 +58,7 @@ from lightning_lite.utilities.imports import _HPU_AVAILABLE, _IPU_AVAILABLE, _IS
 
 _PLUGIN = Union[Precision, ClusterEnvironment, CheckpointIO]
 _PLUGIN_INPUT = Union[_PLUGIN, str]
+_PRECISION_INPUT = Literal["16", 16, "32", 32, "64", 64, "bf16"]
 
 
 class _Connector:
@@ -111,7 +112,7 @@ class _Connector:
         # For devices: Assign gpus, ipus, etc. to the accelerator flag and devices flag
         self._strategy_flag: Optional[Union[Strategy, str]] = None
         self._accelerator_flag: Optional[Union[Accelerator, str]] = None
-        self._precision_flag: Optional[Union[int, str]] = None
+        self._precision_flag: Optional[str] = None
         self._precision_plugin_flag: Optional[Precision] = None
         self._cluster_environment_flag: Optional[Union[ClusterEnvironment, str]] = None
         self._parallel_devices: List[Union[int, torch.device, str]] = []
@@ -202,7 +203,7 @@ class _Connector:
                 raise ValueError(
                     f"Precision {repr(precision)} is invalid. Allowed precision values: {self._precision_types}"
                 )
-            self._precision_flag = precision
+            self._precision_flag = str(precision)
 
         if plugins:
             plugins_flags_types: Dict[str, int] = Counter()
@@ -424,10 +425,10 @@ class _Connector:
             return self._precision_plugin_flag
 
         if isinstance(self.accelerator, TPUAccelerator):
-            if self._precision_flag == 32:
+            if self._precision_flag == "32":
                 return TPUPrecision()
-            elif self._precision_flag in (16, "bf16"):
-                if self._precision_flag == 16:
+            elif self._precision_flag in ("16", "bf16"):
+                if self._precision_flag == "16":
                     rank_zero_warn(
                         "You passed `Lite(accelerator='tpu', precision=16)` but AMP"
                         " is not supported with TPUs. Using `precision='bf16'` instead."
@@ -436,22 +437,22 @@ class _Connector:
         if isinstance(self.strategy, DeepSpeedStrategy):
             return DeepSpeedPrecision(self._precision_flag, amp_type="native", amp_level=None)  # type: ignore
 
-        if self._precision_flag == 32:
+        if self._precision_flag == "32":
             return Precision()
-        if self._precision_flag == 64:
+        if self._precision_flag == "64":
             return DoublePrecision()
 
-        if self._precision_flag == 16 and self._accelerator_flag == "cpu":
+        if self._precision_flag == "16" and self._accelerator_flag == "cpu":
             rank_zero_warn(
                 "You passed `Lite(accelerator='cpu', precision=16)` but native AMP is not supported on CPU."
                 " Using `precision='bf16'` instead."
             )
             self._precision_flag = "bf16"
 
-        if self._precision_flag in (16, "bf16"):
+        if self._precision_flag in ("16", "bf16"):
             rank_zero_info(
                 "Using 16-bit Automatic Mixed Precision (AMP)"
-                if self._precision_flag == 16
+                if self._precision_flag == "16"
                 else "Using bfloat16 Automatic Mixed Precision (AMP)"
             )
 
@@ -463,7 +464,7 @@ class _Connector:
     def _validate_precision_choice(self) -> None:
         """Validate the combination of choices for precision, and accelerator."""
         if isinstance(self.accelerator, TPUAccelerator):
-            if self._precision_flag == 64:
+            if self._precision_flag == "64":
                 raise NotImplementedError(
                     "`Lite(accelerator='tpu', precision=64)` is not implemented."
                     " Please, open an issue in `https://github.com/Lightning-AI/lightning/issues`"

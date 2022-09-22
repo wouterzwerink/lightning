@@ -43,7 +43,7 @@ class DeepSpeedPrecision(Precision):
             If unsupported ``precision`` is provided.
     """
 
-    def __init__(self, precision: Union[str, int], amp_type: str, amp_level: Optional[str] = None) -> None:
+    def __init__(self, precision: Literal["16", "32", "bf16"], amp_type: str, amp_level: Optional[str] = None) -> None:
         if amp_type == AMPType.APEX:
             if not _APEX_AVAILABLE:
                 raise ImportError(
@@ -61,7 +61,7 @@ class DeepSpeedPrecision(Precision):
             )
 
         super().__init__()
-        self.precision = precision
+        self.precision = str(precision)
         self.amp_type = amp_type
         self.amp_level = amp_level
 

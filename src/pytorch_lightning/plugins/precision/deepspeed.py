@@ -17,6 +17,7 @@ from lightning_utilities.core.imports import RequirementCache
 from lightning_utilities.core.rank_zero import WarningCache
 from torch import Tensor
 from torch.optim import LBFGS, Optimizer
+from typing_extensions import Literal
 
 import pytorch_lightning as pl
 from lightning_lite.utilities.enums import AMPType, PrecisionType
@@ -51,7 +52,7 @@ class DeepSpeedPrecisionPlugin(PrecisionPlugin):
             If unsupported ``precision`` is provided.
     """
 
-    def __init__(self, precision: Union[str, int], amp_type: str, amp_level: Optional[str] = None) -> None:
+    def __init__(self, precision: Literal["16", "32", "bf16"], amp_type: str, amp_level: Optional[str] = None) -> None:
         if amp_type == AMPType.APEX:
             if not _APEX_AVAILABLE:
                 raise MisconfigurationException(
@@ -69,7 +70,7 @@ class DeepSpeedPrecisionPlugin(PrecisionPlugin):
             )
 
         super().__init__()
-        self.precision = precision
+        self.precision = str(precision)
         self.amp_type = amp_type
         self.amp_level = amp_level
 
