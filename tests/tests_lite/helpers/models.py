@@ -46,7 +46,7 @@ class BoringLite(LightningLite):
         assert all(p.device.type == "cuda" for p in model.parameters())
         assert batch.device.type == "cuda"
         assert all(p.device.type == "cuda" for p in self.optimizer.param_groups[0]["params"])
-        self.optimizer.optimizer._clear_cache()
+
         print(self.optimizer.optimizer._per_device_params)
         output = model(batch)
         loss = torch.nn.functional.mse_loss(output, torch.ones_like(output))
