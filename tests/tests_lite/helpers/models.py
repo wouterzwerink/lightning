@@ -45,7 +45,7 @@ class BoringLite(LightningLite):
     def step(self, model: Module, batch: Any) -> Tensor:
         assert all(p.device.type == "cuda" for p in model.parameters())
         assert batch.device.type == "cuda"
-        assert all(p.device.type == "cuda" for p in self.optimizer.param_groups["params"])
+        assert all(p.device.type == "cuda" for p in self.optimizer.param_groups[0]["params"])
         output = model(batch)
         loss = torch.nn.functional.mse_loss(output, torch.ones_like(output))
         return loss
