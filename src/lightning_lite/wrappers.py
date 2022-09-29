@@ -98,6 +98,7 @@ class _LiteModule(_DeviceDtypeModuleMixin):
         """Casts all inputs to the right precision and handles autocast for operations in the module forward
         method."""
         precision = self._precision_plugin.precision
+        print("precision", precision)
         precision_to_type = {
             "bf16": torch.bfloat16,
             16: torch.float16,
@@ -108,6 +109,7 @@ class _LiteModule(_DeviceDtypeModuleMixin):
         args, kwargs = apply_to_collection(
             [args, kwargs], dtype=Tensor, function=_convert_fp_tensor, dst_type=precision_to_type[precision]
         )
+        print(args, kwargs)
 
         with self._precision_plugin.forward_context():
             output = self._forward_module(*args, **kwargs)
