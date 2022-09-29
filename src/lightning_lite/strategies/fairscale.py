@@ -151,7 +151,6 @@ class DDPSpawnShardedStrategy(DDPSpawnStrategy):
         for optimizer in optimizers:
             optimizer._clear_cache()
         model = ShardedDataParallel(module, sharded_optimizer=optimizers, **self._ddp_kwargs)
-
         return model, optimizers
 
     @contextmanager
