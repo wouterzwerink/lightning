@@ -76,7 +76,7 @@ class DDPShardedStrategy(DDPStrategy):
             The model wrapped into a :class:`~fairscale.nn.data_parallel.ShardedDataParallel` module
             and a list of optimizer wrapped in :class:~`fairscale.optim.OSS`.
         """
-        optimizers = _reinit_optimizers_with_oss(optimizers, self.precision_plugin, self.num_nodes)
+        # optimizers = _reinit_optimizers_with_oss(optimizers, self.precision_plugin, self.num_nodes)
         model = ShardedDataParallel(module, sharded_optimizer=optimizers, **self._ddp_kwargs)
         return model, optimizers
 
@@ -147,7 +147,7 @@ class DDPSpawnShardedStrategy(DDPSpawnStrategy):
             The model wrapped into a :class:`~fairscale.nn.data_parallel.ShardedDataParallel` module
             and a list of optimizer wrapped in :class:~`fairscale.optim.OSS`.
         """
-        optimizers = _reinit_optimizers_with_oss(optimizers, self.precision_plugin, self.num_nodes)
+        # optimizers = _reinit_optimizers_with_oss(optimizers, self.precision_plugin, self.num_nodes)
         model = ShardedDataParallel(module, sharded_optimizer=optimizers, **self._ddp_kwargs)
         return model, optimizers
 
