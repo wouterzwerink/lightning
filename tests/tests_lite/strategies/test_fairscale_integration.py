@@ -17,11 +17,12 @@ import pytest
 import torch
 from tests_lite.helpers.models import BoringLite
 from tests_lite.helpers.runif import RunIf
+from torch.optim import Optimizer
 
 
 class ShardedSaveAndLoad(BoringLite):
     def get_optimizer(self, module):
-        optimizer = super().get_optimizer(module)
+        optimizer: Optimizer = super().get_optimizer(module)
         if self.with_fairscale_oss:
             from fairscale.optim import OSS
 
