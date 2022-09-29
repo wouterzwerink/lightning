@@ -43,6 +43,8 @@ class BoringLite(LightningLite):
         return DataLoader(RandomDataset(32, 64))
 
     def step(self, model: Module, batch: Any) -> Tensor:
+        assert all(p.device.type == "cuda" for p in model.parameters())
+        assert batch.device.type == "cuda"
         output = model(batch)
         loss = torch.nn.functional.mse_loss(output, torch.ones_like(output))
         return loss

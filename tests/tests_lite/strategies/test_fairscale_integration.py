@@ -58,9 +58,9 @@ class ShardedSaveAndLoad(BoringLite):
 
 
 @RunIf(fairscale=True)
-@pytest.mark.parametrize("accelerator", ["cpu", pytest.param("cuda", marks=RunIf(min_cuda_gpus=2))])
-@pytest.mark.parametrize("strategy", (pytest.param("ddp_sharded", marks=RunIf(standalone=True)), "ddp_sharded_spawn"))
-@pytest.mark.parametrize("with_fairscale_oss", (True, False))
+@pytest.mark.parametrize("accelerator", [pytest.param("cuda", marks=RunIf(min_cuda_gpus=2))])
+@pytest.mark.parametrize("strategy", (pytest.param("ddp_sharded", marks=RunIf(standalone=True), )))
+@pytest.mark.parametrize("with_fairscale_oss", (True, ))
 def test_fairscale_multi_process_checkpoint_state_consolidation(with_fairscale_oss, strategy, accelerator, tmpdir):
     """Test that the sharded optimizer states get consolidated when saving the checkpoint, and that the loaded
     weights is identical to the saved one."""
