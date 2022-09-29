@@ -77,9 +77,9 @@ class DDPShardedStrategy(DDPStrategy):
             and a list of optimizer wrapped in :class:~`fairscale.optim.OSS`.
         """
         optimizers = _reinit_optimizers_with_oss(optimizers, self.precision_plugin, self.num_nodes)
+        model = ShardedDataParallel(module, sharded_optimizer=optimizers, **self._ddp_kwargs)
         for optimizer in optimizers:
             optimizer._clear_cache()
-        model = ShardedDataParallel(module, sharded_optimizer=optimizers, **self._ddp_kwargs)
         return model, optimizers
 
     @contextmanager
