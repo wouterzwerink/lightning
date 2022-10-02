@@ -121,7 +121,8 @@ def _assert_save_equality(lite, ckpt_path):
 
     # if lite.is_global_zero:
     checkpoint = lite.load(ckpt_path)
-    saved_model = lite.get_model().load_state_dict(checkpoint["model"])
+    saved_model = lite.get_model()
+    saved_model.load_state_dict(checkpoint["model"])
 
     # model parameters are identical after loading
     for ddp_param, shard_param in zip(model_state_dict.values(), saved_model.state_dict().values()):
