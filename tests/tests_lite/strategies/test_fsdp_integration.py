@@ -29,6 +29,7 @@ class FSDPLite(BoringLite):
         for i, layer in enumerate(model):
             if i % 2 == 0:
                 model[i] = wrap(layer)
+        return model
 
     def step(self, model, batch):
         forward_module = model._forward_module
