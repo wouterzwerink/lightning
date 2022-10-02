@@ -38,7 +38,7 @@ class FSDPLite(BoringLite):
         assert isinstance(forward_module, FullyShardedDataParallel)
         assert isinstance(self._precision_plugin, FSDPPrecision)
         # the root module should not be resharding
-        assert not original_module.reshard_after_forward
+        # assert not original_module.reshard_after_forward
 
         precision = torch.float16 if self._precision_plugin.precision == 16 else torch.bfloat16
         assert forward_module.mixed_precision.param_dtype == precision

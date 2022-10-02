@@ -190,7 +190,6 @@ class FSDPStrategy(ParallelStrategy):
             backward_prefetch=self.backward_prefetch,
             mixed_precision=self.mixed_precision_config,
             device_id=self.root_device.index,
-            reshard_after_forward=True,
             **self._ddp_kwargs,
         ):
             yield
