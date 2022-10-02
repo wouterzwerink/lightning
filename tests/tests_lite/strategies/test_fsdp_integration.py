@@ -42,8 +42,6 @@ class FSDPLite(BoringLite):
         original_module = model.module
         assert isinstance(forward_module, FullyShardedDataParallel)
         assert isinstance(self._precision_plugin, FSDPPrecision)
-        # the root module should not be resharding
-        # assert not original_module.reshard_after_forward
 
         precision = torch.float16 if self._precision_plugin.precision == 16 else torch.bfloat16
         assert forward_module.mixed_precision.param_dtype == precision
@@ -51,9 +49,10 @@ class FSDPLite(BoringLite):
         assert forward_module.mixed_precision.buffer_dtype == precision
 
         for layer_num in [0, 2]:
-            assert isinstance(original_module[layer_num], FullyShardedDataParallel)
-            # The nested layers should have `reshard_after_forward` set to True
-            # assert original_module[layer_num].reshard_after_forward
+            if self.manual_wrapping:
+                assert isinstance(original_module[layer_num], FullyShardedDataParallel)
+            else:
+                assert isinstance(original_module[layer_num], torch.nn.Sequential)
 
             assert original_module[layer_num].mixed_precision.param_dtype == precision
             assert original_module[layer_num].mixed_precision.reduce_dtype == precision

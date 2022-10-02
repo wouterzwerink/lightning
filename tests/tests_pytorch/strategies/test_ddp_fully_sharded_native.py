@@ -143,14 +143,20 @@ class TestFSDPModelAutoWrapped(BoringModel):
         self._assert_layer_fsdp_instance()
 
     def _assert_layer_fsdp_instance(self) -> None:
-        assert isinstance(self.layer, torch.nn.Sequential)
+        assert isinstance(self.layer, FullyShardedDataParallel)
         assert isinstance(self.trainer.strategy.precision_plugin, FullyShardedNativeNativeMixedPrecisionPlugin)
+        # root should not be resharding
+        assert self.layer.reshard_after_forward is False
 
         precision = torch.float16 if self.precision == 16 else torch.bfloat16
+        assert self.layer.mixed_precision.param_dtype == precision
+        assert self.layer.mixed_precision.reduce_dtype == precision
+        assert self.layer.mixed_precision.buffer_dtype == precision
+
         for layer_num in [0, 2]:
-            assert isinstance(self.layer[layer_num], FullyShardedDataParallel)
+            assert isinstance(self.layer.module[layer_num], FullyShardedDataParallel)
             # Assert that the nested layers are set reshard_after_forward to True
-            assert self.layer[layer_num].reshard_after_forward
+            assert self.layer.module[layer_num].reshard_after_forward is True
 
             assert self.layer[layer_num].mixed_precision.param_dtype == precision
             assert self.layer[layer_num].mixed_precision.reduce_dtype == precision
