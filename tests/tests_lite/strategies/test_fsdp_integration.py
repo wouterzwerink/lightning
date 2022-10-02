@@ -20,7 +20,7 @@ from torch.distributed.fsdp import FullyShardedDataParallel
 from torch.distributed.fsdp.wrap import wrap
 
 from lightning_lite.plugins import FSDPPrecision
-from tests.tests_lite.helpers.runif import RunIf
+from tests_lite.helpers.runif import RunIf
 
 
 class FSDPLite(BoringLite):
