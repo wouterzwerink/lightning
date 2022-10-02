@@ -16,11 +16,11 @@ import tempfile
 import pytest
 import torch
 from tests_lite.helpers.models import BoringLite
+from tests_lite.helpers.runif import RunIf
 from torch.distributed.fsdp import FullyShardedDataParallel
 from torch.distributed.fsdp.wrap import wrap
 
 from lightning_lite.plugins import FSDPPrecision
-from tests_lite.helpers.runif import RunIf
 
 
 class FSDPLite(BoringLite):
@@ -61,51 +61,11 @@ class FSDPLite(BoringLite):
         with tempfile.TemporaryFile() as ckpt_path:
             ckpt_path = self.broadcast(str(ckpt_path))
 
-            checkpoint = dict(
-                model=self.model.state_dict(),
-                optimizer = self.optimizer.state_dict()
-            )
+            checkpoint = dict(model=self.model.state_dict(), optimizer=self.optimizer.state_dict())
 
             self._strategy.save_checkpoint(checkpoint, ckpt_path)
 
         _assert_save_equality(self, ckpt_path)
-
-#
-#
-# class TestFSDPModelAutoWrapped(BoringModel):
-#     def __init__(self):
-#         super().__init__()
-#         self.layer = torch.nn.Sequential(torch.nn.Linear(32, 32), torch.nn.ReLU(), torch.nn.Linear(32, 2))
-#
-#     def configure_optimizers(self):
-#         return torch.optim.SGD(self.trainer.model.parameters(), lr=0.1)
-#
-#     def on_train_batch_end(self, outputs, batch, batch_idx) -> None:
-#         self._assert_layer_fsdp_instance()
-#
-#     def on_test_batch_end(self, outputs, batch, batch_idx, dataloader_idx) -> None:
-#         self._assert_layer_fsdp_instance()
-#
-#     def on_validation_batch_end(self, outputs, batch, batch_idx, dataloader_idx) -> None:
-#         self._assert_layer_fsdp_instance()
-#
-#     def on_predict_batch_end(self, outputs, batch, batch_idx, dataloader_idx) -> None:
-#         self._assert_layer_fsdp_instance()
-#
-#     def _assert_layer_fsdp_instance(self) -> None:
-#         assert isinstance(self.layer, torch.nn.Sequential)
-#         assert isinstance(self.trainer.strategy.precision_plugin, FullyShardedNativeNativeMixedPrecisionPlugin)
-#
-#         precision = torch.float16 if self.precision == 16 else torch.bfloat16
-#         for layer_num in [0, 2]:
-#             assert isinstance(self.layer[layer_num], FullyShardedDataParallel)
-#             # Assert that the nested layers are set reshard_after_forward to True
-#             assert self.layer[layer_num].reshard_after_forward
-#
-#             assert self.layer[layer_num].mixed_precision.param_dtype == precision
-#             assert self.layer[layer_num].mixed_precision.reduce_dtype == precision
-#             assert self.layer[layer_num].mixed_precision.buffer_dtype == precision
-
 
 
 @RunIf(min_cuda_gpus=1, skip_windows=True, standalone=True, min_torch="1.12")
