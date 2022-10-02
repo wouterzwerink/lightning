@@ -24,8 +24,13 @@ from lightning_lite.plugins import FSDPPrecision
 
 
 class FSDPLite(BoringLite):
+    manual_wrap = False
+
     def get_model(self):
         model = torch.nn.Sequential(torch.nn.Linear(32, 32), torch.nn.ReLU(), torch.nn.Linear(32, 2))
+        if not self.manual_wrap:
+            return model
+
         for i, layer in enumerate(model):
             if i % 2 == 0:
                 model[i] = wrap(layer)
