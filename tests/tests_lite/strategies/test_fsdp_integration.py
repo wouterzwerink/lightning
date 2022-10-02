@@ -24,11 +24,11 @@ from lightning_lite.plugins import FSDPPrecision
 
 
 class FSDPLite(BoringLite):
-    manual_wrap = False
+    manual_wrapping = False
 
     def get_model(self):
         model = torch.nn.Sequential(torch.nn.Linear(32, 32), torch.nn.ReLU(), torch.nn.Linear(32, 2))
-        if not self.manual_wrap:
+        if not self.manual_wrapping:
             return model
 
         for i, layer in enumerate(model):
@@ -83,7 +83,10 @@ class FSDPLite(BoringLite):
 
 @RunIf(min_cuda_gpus=1, skip_windows=True, standalone=True, min_torch="1.12")
 @pytest.mark.parametrize("precision", (16, pytest.param("bf16", marks=RunIf(bf16_cuda=True))))
-def test_fsdp_train_save_load(precision):
+@pytest.mark.parametrize("manual_wrapping", [True, False])
+def test_fsdp_train_save_load(manual_wrapping, precision):
     """Test to ensure that checkpoint is saved correctly when using a single GPU, and all stages can be run."""
-    FSDPLite(accelerator="cuda", strategy="fsdp", devices=2, precision=precision).run()
+    lite = FSDPLite(accelerator="cuda", strategy="fsdp", devices=2, precision=precision)
+    lite.manual_wrapping = manual_wrapping
+    lite.run()
 
