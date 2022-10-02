@@ -29,6 +29,7 @@ class FSDPLite(BoringLite):
         for i, layer in enumerate(model):
             if i % 2 == 0:
                 model[i] = wrap(layer)
+        model = wrap(model)
         return model
 
     def step(self, model, batch):
