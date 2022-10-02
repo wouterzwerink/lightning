@@ -117,7 +117,7 @@ def test_fsdp_train_save_load(precision):
 
 
 def _assert_save_equality(lite, ckpt_path):
-    model_state_dict = lite._strategy.get_module_state_dict(self.model)
+    model_state_dict = lite._strategy.get_module_state_dict(lite.model)
 
     if lite.is_global_zero:
         checkpoint = lite.load(ckpt_path)
