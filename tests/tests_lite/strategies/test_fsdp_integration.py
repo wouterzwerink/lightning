@@ -58,9 +58,9 @@ class FSDPLite(BoringLite):
 
     def run(self):
         super().run()
+        self.model.cpu()
         with tempfile.TemporaryFile() as ckpt_path:
             ckpt_path = self.broadcast(str(ckpt_path))
-
 
             checkpoint = dict(
                 model=self.model.state_dict(),
