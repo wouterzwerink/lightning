@@ -58,7 +58,6 @@ class FSDPLite(BoringLite):
 
     def run(self):
         super().run()
-        self.model.cpu()
         with tempfile.TemporaryFile() as ckpt_path:
             ckpt_path = self.broadcast(str(ckpt_path))
 
@@ -126,4 +125,4 @@ def _assert_save_equality(lite, ckpt_path):
 
         # model parameters are identical after loading
         for ddp_param, shard_param in zip(model_state_dict.values(), saved_model.state_dict().values()):
-            assert torch.equal(ddp_param.float().cpu(), shard_param)
+            assert torch.equal(ddp_param.float().cpu(), shard_param.cpu())
