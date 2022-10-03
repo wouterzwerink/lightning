@@ -84,7 +84,8 @@ class NativeMixedPrecision(Precision):
         # note: the scaler will skip the `optimizer.step` if nonfinite gradients are found
 
         print("step, scaler step", self.scaler, self.scaler._enabled)
-        self.scaler.unscale_(optimizer)
+        # self.scaler.unscale_(optimizer)
+        print(self.scaler.optimizer_state)
         step_output = self.scaler.step(optimizer, **kwargs)
         self.scaler.update()
         return step_output
