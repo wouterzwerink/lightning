@@ -70,8 +70,6 @@ class NativeMixedPrecision(Precision):
             print("scaling")
             tensor = self.scaler.scale(tensor)
         super().backward(tensor, model, *args, **kwargs)
-        for param in model.parameters():
-            print("modelgrad", param.grad)
 
     def optimizer_step(
         self,

@@ -72,6 +72,8 @@ class BoringLite(LightningLite):
         optimizer.zero_grad()
         loss = self.step(model, batch)
         self.backward(loss)
+        for p in model.parameters():
+            print("model grad", p.grad)
         self.after_backward(model)
         optimizer.step()
         self.after_optimizer_step(model, optimizer)
