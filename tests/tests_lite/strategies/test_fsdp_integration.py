@@ -83,7 +83,7 @@ def custom_auto_wrap_policy(module, recurse, unwrapped_params: int, min_num_para
 
 @RunIf(min_cuda_gpus=1, skip_windows=True, standalone=True, min_torch="1.12")
 @pytest.mark.parametrize("precision", [16, ])  # pytest.param("bf16", marks=RunIf(bf16_cuda=True))])
-@pytest.mark.parametrize("manual_wrapping", [True])
+@pytest.mark.parametrize("manual_wrapping", [False])
 def test_fsdp_train_save_load(manual_wrapping, precision):
     """Test FSDP training, saving and loading with different wrapping and precision settings."""
     strategy = FSDPStrategy() if manual_wrapping else FSDPStrategy(auto_wrap_policy=custom_auto_wrap_policy)
