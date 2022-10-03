@@ -86,6 +86,9 @@ class NativeMixedPrecision(Precision):
         print("step, scaler step", self.scaler, self.scaler._enabled)
         # self.scaler.unscale_(optimizer)
         print(self.scaler._per_optimizer_states[id(optimizer)])
+        for group in optimizer.param_groups:
+            for param in group["params"]:
+                print(param.grad)
         step_output = self.scaler.step(optimizer, **kwargs)
         print(self.scaler._per_optimizer_states[id(optimizer)])
         self.scaler.update()
