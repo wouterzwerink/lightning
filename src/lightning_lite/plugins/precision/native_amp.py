@@ -65,7 +65,7 @@ class NativeMixedPrecision(Precision):
         return _convert_fp_tensor(data, dst_type)
 
     def backward(self, tensor: Tensor, model: Optional[Module], *args: Any, **kwargs: Any) -> None:
-        print("backward, scaler", self.scaler)
+        print("backward, scaler", self.scaler, self.scaler._enabled)
         if self.scaler is not None:
             print("scaling")
             tensor = self.scaler.scale(tensor)
@@ -83,7 +83,7 @@ class NativeMixedPrecision(Precision):
             raise TypeError("Native AMP and the LBFGS optimizer are not compatible.")
         # note: the scaler will skip the `optimizer.step` if nonfinite gradients are found
 
-        print("step, scaler step", self.scaler)
+        print("step, scaler step", self.scaler, self.scaler._enabled)
         step_output = self.scaler.step(optimizer, **kwargs)
         self.scaler.update()
         return step_output
