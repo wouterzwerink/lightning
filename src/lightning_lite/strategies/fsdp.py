@@ -19,6 +19,7 @@ import torch
 from torch import Tensor
 from torch.distributed import default_pg_timeout
 from torch.nn import Module
+from torch.optim import Optimizer
 
 from lightning_lite.accelerators import Accelerator
 from lightning_lite.plugins import CheckpointIO, ClusterEnvironment, Precision
@@ -30,6 +31,7 @@ from lightning_lite.utilities.distributed import distributed_available, get_defa
 from lightning_lite.utilities.distributed import group as _group
 from lightning_lite.utilities.distributed import init_dist_connection, ReduceOp, sync_ddp_if_available
 from lightning_lite.utilities.imports import _TORCH_GREATER_EQUAL_1_12
+from lightning_lite.utilities.optimizer import optimizers_to_device
 from lightning_lite.utilities.rank_zero import rank_zero_only
 from lightning_lite.utilities.seed import reset_seed
 
@@ -175,6 +177,10 @@ class FSDPStrategy(ParallelStrategy):
             device_id=self.root_device.index,
             **self._ddp_kwargs,
         )
+
+    def setup_optimizer(self, optimizer: Optimizer) -> Optimizer:
+        optimizers_to_device([optimizer], self.root_device)
+        return optimizer
 
     def module_to_device(self, module: Module) -> None:
         pass
