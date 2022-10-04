@@ -56,10 +56,10 @@ class BoringLite(LightningLite):
     def run(self) -> None:
         # with self._strategy.module_sharded_context():
         model = self.get_model()
-        optimizer = self.get_optimizer(model)
+        # optimizer = self.get_optimizer(model)
         dataloader = self.get_dataloader()
 
-        model, optimizer = self.setup(model, optimizer)
+        model, optimizer = self.setup(model)
         dataloader = self.setup_dataloaders(dataloader)
 
         self.model = model
@@ -73,8 +73,8 @@ class BoringLite(LightningLite):
         optimizer.zero_grad()
         loss = self.step(model, batch)
         self.backward(loss)
-        for p in model.parameters():
-            print("model grad", p.grad)
+        # for p in model.parameters():
+        #     print("model grad", p.grad)
         self.after_backward(model)
         optimizer.step()
         self.after_optimizer_step(model, optimizer)
