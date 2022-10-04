@@ -162,6 +162,9 @@ class LightningLite(ABC):
         model, optimizers = self._strategy.setup_module_and_optimizers(model, list(optimizers))
         model = _LiteModule(model, self._precision_plugin, original_module=original_model)
 
+        optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
+        optimizers = [optimizer]
+
         # Update the _DeviceDtypeModuleMixin's device parameter
         model.to(self.device if move_to_device else next(model.parameters()).device)
 
