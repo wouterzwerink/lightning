@@ -56,10 +56,10 @@ class BoringLite(LightningLite):
     def run(self) -> None:
         # with self._strategy.module_sharded_context():
         model = self.get_model()
-        # optimizer = self.get_optimizer(model)
+        optimizer = self.get_optimizer(model)
         dataloader = self.get_dataloader()
 
-        model, optimizer = self.setup(model)
+        model, optimizer = self.setup(model, optimizer)
         dataloader = self.setup_dataloaders(dataloader)
 
         self.model = model
