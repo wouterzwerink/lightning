@@ -160,10 +160,27 @@ class LightningLite(ABC):
 
         # Let accelerator/plugin wrap and connect the models and optimizers
         model, optimizers = self._strategy.setup_module_and_optimizers(model, list(optimizers))
+
+        if isinstance(self._strategy, FSDPStrategy):
+            # When the user creates the optimizer, they reference the parameters on the CPU.
+            # However, when running with TPU the parameters get copied and the reference in the optimizer
+            # remains invalid. We need to update the references to point to the parameter tensors on the device.
+            params_optimizer = dict(optimizers.param_groups)
+            # model = self.to_device(model)
+            # XLA makes a copy on the parameters, so the device is not the same before and after to_device.
+            params_fsdp = dict(model.named_parameters())
+
+            # todo prefix
+            mapping = {param: params_fsdp[name] for name, param in params_optimizer.items()}
+            print(mapping)
+            for optimizer in optimizers:
+                for param_group in optimizer.param_groups:
+                    param_group["params"] = [mapping.get(p, p) for p in param_group["params"]]
+
         model = _LiteModule(model, self._precision_plugin, original_module=original_model)
 
-        optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
-        optimizers = [optimizer]
+        # optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
+        # optimizers = [optimizer]
 
         # Update the _DeviceDtypeModuleMixin's device parameter
         model.to(self.device if move_to_device else next(model.parameters()).device)
@@ -410,7 +427,7 @@ class LightningLite(ABC):
                 category=PossibleUserWarning,
             )
 
-        if isinstance(self._strategy, (XLAStrategy, FSDPStrategy)):
+        if isinstance(self._strategy, XLAStrategy):
             # When the user creates the optimizer, they reference the parameters on the CPU.
             # However, when running with TPU the parameters get copied and the reference in the optimizer
             # remains invalid. We need to update the references to point to the parameter tensors on the device.
