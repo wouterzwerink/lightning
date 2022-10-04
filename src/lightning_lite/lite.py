@@ -170,7 +170,7 @@ class LightningLite(ABC):
             # todo prefix
 
             for optimizer in optimizers:
-                params_optimizer = dict(optimizers.param_groups)
+                params_optimizer = dict(optimizer.param_groups)
                 # model = self.to_device(model)
                 # XLA makes a copy on the parameters, so the device is not the same before and after to_device.
                 params_fsdp = dict(model.named_parameters())
