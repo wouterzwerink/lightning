@@ -178,9 +178,9 @@ class FSDPStrategy(ParallelStrategy):
             **self._ddp_kwargs,
         )
 
-    def setup_optimizer(self, optimizer: Optimizer) -> Optimizer:
-        optimizers_to_device([optimizer], self.root_device)
-        return optimizer
+    # def setup_optimizer(self, optimizer: Optimizer) -> Optimizer:
+    #     optimizers_to_device([optimizer], self.root_device)
+    #     return optimizer
 
     def module_to_device(self, module: Module) -> None:
         pass
