@@ -71,6 +71,7 @@ _______
     ~path.Path
     ~drive.Drive
     ~payload.Payload
+    ~mount.Mount
 
 Learn more about :ref:`Storage <storage>`.
 
@@ -89,3 +90,19 @@ _______
     ~cloud.CloudRuntime
     ~singleprocess.SingleProcessRuntime
     ~multiprocess.MultiProcessRuntime
+
+
+----
+
+lightning_app.utilities.packaging
+_________________________________
+
+.. currentmodule:: lightning_app.utilities.packaging
+
+.. autosummary::
+    :toctree: generated/
+    :nosignatures:
+    :template: classtemplate_no_index.rst
+
+    ~cloud_compute.CloudCompute
+    ~build_config.BuildConfig

@@ -235,6 +235,7 @@ Keep Learning
    Save files <glossary/storage/drive.rst>
    Share an app  <workflows/share_app>
    Share files between components <workflows/share_files_between_components>
+   Mount an AWS S3 Bucket to the Filesystem <workflows/mount_aws_s3_bucket>
 
 ..
    [Docs under construction] Add a Lightning component  <workflows/add_components/index>
@@ -260,6 +261,7 @@ Keep Learning
    api_reference/frontend
    api_reference/runners
    api_reference/storage
+   api_reference/compute_config
 
 .. toctree::
    :maxdepth: 1
