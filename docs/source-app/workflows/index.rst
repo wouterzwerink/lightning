@@ -107,6 +107,13 @@ Common Workflows
    :button_link: share_files_between_components.html
    :height: 180
 
+.. displayitem::
+   :header: Mount an AWS S3 Bucket to the Filesystem
+   :description: Learn how Lightning Mounts are used to make the contents of an AWS S3 bucket available on disk when running in the cloud.
+   :col_css: col-md-4
+   :button_link: mount_aws_s3_bucket.html
+   :height: 180
+
 
 .. raw:: html
 
