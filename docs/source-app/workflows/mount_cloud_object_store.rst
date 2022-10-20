@@ -31,7 +31,7 @@ the absolute directory path where it should be mounted and pass it to the ``Clou
                cloud_compute=CloudCompute(
                    mounts=Mount(
                        source="s3://ryft-public-sample-data/esRedditJson/",
-                       root_dir="/content/esRedditJson/",
+                       mount_path="/content/esRedditJson/",
                    ),
                )
            )
@@ -46,7 +46,7 @@ You can also pass multiple mounts to a single work by passing a ``List[Mount(...
 Accessing Mounted Files
 =======================
 
-When a mount is configured via ``CloudCompute`` for a ``LightningWork`` running in the cloud, the ``root_dir``
+When a mount is configured via ``CloudCompute`` for a ``LightningWork`` running in the cloud, the ``mount_path``
 directory path is automatically created and populated with the data before your ``LightningWork`` class even begins
 executing. **The files stored in the AWS S3 bucket appear "automagically" as normal files on your local disk**,
 allowing you to perform any standard inspection, listing, or reading of them with standard file processing
@@ -80,7 +80,7 @@ If we expand on the example above, we can see how you might go about listing and
                cloud_compute=CloudCompute(
                    mounts=Mount(
                        source="s3://ryft-public-sample-data/esRedditJson/",
-                       root_dir="/content/esRedditJson/",
+                       mount_path="/content/esRedditJson/",
                    ),
                )
            )
@@ -110,7 +110,7 @@ Currently the following limitations are enforced when using a ``Mount``:
 * Mounts can only be configured for a ``LightningWork``. Use in ``LightningFlow`` is not currently supported.
 * We enforce a hard limit of ``1,000,000`` objects which we can mount from a particular bucket prefix.
 * The maximum size of an object in the bucket can be no more than ``5 GiB``.
-* If multiple mounts are configured for a single ``Work``, then they must each specify unique ``root_dir``
+* If multiple mounts are configured for a single ``Work``, then they must each specify unique ``mount_path``
   arguments (a unique mount point).
 
 .. note::
