@@ -109,9 +109,9 @@ Common Workflows
 
 .. displayitem::
    :header: Mount an AWS S3 Bucket to the Filesystem
-   :description: Learn how Lightning Mounts are used to make the contents of an AWS S3 bucket available on disk when running in the cloud.
+   :description: Learn how Lightning Mounts are used to make the contents of an cloud object store bucket available on disk when running in the cloud.
    :col_css: col-md-4
-   :button_link: mount_aws_s3_bucket.html
+   :button_link: mount_cloud_object_store.html
    :height: 180
 
 

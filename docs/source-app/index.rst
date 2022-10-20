@@ -216,17 +216,18 @@ Keep Learning
    :caption: How to...
 
    Access the App State <workflows/access_app_state/access_app_state>
-   Add a web user interface (UI) <workflows/add_web_ui/index>
    Add a web link  <workflows/add_web_link>
+   Add a web user interface (UI) <workflows/add_web_ui/index>
    Add encrypted secrets <glossary/secrets>
    Arrange app tabs <workflows/arrange_tabs/index>
+   Cache Work run calls  <workflows/run_work_once>
+   Customize your cloud compute <core_api/lightning_work/compute>
    Develop a Command Line Interface (CLI) <workflows/build_command_line_interface/index>
    Develop a Lightning App <workflows/build_lightning_app/index>
    Develop a Lightning Component <workflows/build_lightning_component/index>
    Develop a REST API <workflows/build_rest_api/index>
-   Cache Work run calls  <workflows/run_work_once>
-   Customize your cloud compute <core_api/lightning_work/compute>
    Extend an existing app <workflows/extend_app>
+   Mount Data from a Cloud Object Store to the Filesystem <workflows/mount_cloud_object_store>
    Publish a Lightning component <workflows/build_lightning_component/publish_a_component>
    Run a server within a Lightning App <workflows/add_server/index>
    Run an App on the cloud <workflows/run_app_on_cloud/index>
@@ -235,7 +236,6 @@ Keep Learning
    Save files <glossary/storage/drive.rst>
    Share an app  <workflows/share_app>
    Share files between components <workflows/share_files_between_components>
-   Mount an AWS S3 Bucket to the Filesystem <workflows/mount_aws_s3_bucket>
 
 ..
    [Docs under construction] Add a Lightning component  <workflows/add_components/index>
