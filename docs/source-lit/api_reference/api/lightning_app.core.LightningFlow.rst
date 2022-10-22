@@ -1,1 +1,10 @@
-../../../source-app/api_reference/api/lightning_app.core.LightningFlow.rst
+﻿.. role:: hidden
+    :class: hidden-section
+.. currentmodule:: lightning_app.core
+
+
+LightningFlow
+=============
+
+.. autoclass:: LightningFlow
+    :members:
