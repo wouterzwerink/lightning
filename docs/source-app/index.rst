@@ -268,17 +268,18 @@ Keep Learning
    :caption: Glossary
 
    App Components Tree <glossary/app_tree>
+   Apple and Android mobile devices with Lighting Apps <glossary/ios_and_android>
    Build Configuration <glossary/build_config/build_config>
    Command Line Interface (CLI) <glossary/command_lines/command_lines>
    DAG <glossary/dag>
-   Event Loop <glossary/event_loop>
-   Environment Variables <glossary/environment_variables>
    Encrypted Secrets <glossary/secrets>
+   Environment Variables <glossary/environment_variables>
+   Event Loop <glossary/event_loop>
    Frontend <workflows/add_web_ui/glossary_front_end.rst>
-   Apple and Android mobile devices with Lighting Apps <glossary/ios_and_android>
+   Mounts <glossary/mount.rst>
    REST API <glossary/restful_api/restful_api>
-   Sharing Components <glossary/sharing_components>
    Scheduling <glossary/scheduling.rst>
+   Sharing Components <glossary/sharing_components>
    Storage <glossary/storage/storage.rst>
    UI <workflows/add_web_ui/glossary_ui.rst>
 

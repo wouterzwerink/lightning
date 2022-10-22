@@ -1,8 +1,8 @@
 :orphan:
 
-######################################################
-Mount Data From a Cloud Object Store to the Filesystem
-######################################################
+##############################
+Mount Data From a Cloud Bucket
+##############################
 
 **Audience:** Users who want to read files stored in a Cloud Object Bucket in an app.
 
@@ -14,8 +14,11 @@ Mounting Public AWS S3 Buckets
 Configuring a Mount in a Work
 =============================
 
-To mount data from a cloud bucket to your app compute, initialize a ``Mount`` object with the source path and
-the absolute directory path where it should be mounted and pass it to the ``CloudCompute`` it should be mounted on.
+To mount data from a cloud bucket to your app compute, initialize a ``Mount`` object with the source path
+of the s3 bucket and the absolute directory path where it should be mounted and pass the ``Mount`` to the
+``CloudCompute`` of the ``LightningWork`` it should be mounted on.
+
+In this example, we will mount an S3 bucket: ``s3://ryft-public-sample-data/esRedditJson/`` to ``/content/esRedditJson/``.
 
 .. code:: python
     :emphasize-lines: 9-12
@@ -42,17 +45,44 @@ the absolute directory path where it should be mounted and pass it to the ``Clou
 You can also pass multiple mounts to a single work by passing a ``List[Mount(...), ...]`` to the
 ``CloudCompute(mounts=...)`` argument.
 
-=======================
-Accessing Mounted Files
-=======================
+.. note::
 
-When a mount is configured via ``CloudCompute`` for a ``LightningWork`` running in the cloud, the ``mount_path``
-directory path is automatically created and populated with the data before your ``LightningWork`` class even begins
-executing. **The files stored in the AWS S3 bucket appear "automagically" as normal files on your local disk**,
-allowing you to perform any standard inspection, listing, or reading of them with standard file processing
-logic (just like dealing with files on your local machine!)
+    * We enforce a hard limit of ``1,000,000`` objects which we can mount from a particular bucket prefix.
+    * The maximum size of an object in the bucket can be no more than ``5 GiB``.
+    * If multiple mounts are configured for a single ``LightningWork``, then they must each specify unique
+      ``mount_path`` arguments (a unique mount point).
 
-If we expand on the example above, we can see how you might go about listing and reading a file!
+==============================
+Accessing Files From The Mount
+==============================
+
+Once a ``Mount`` object is passed to ``CloudCompute``, you can access, list, or read any file from the mount
+under the specified ``mount_path``, just like you would if it was on your local machine.
+
+Assuming you mount_path is ``"/content/esRedditJson/"`` you can do the following:
+
+-----------
+List Files:
+-----------
+
+.. code:: python
+
+    files = os.listdir("/content/esRedditJson/")
+
+-----------
+Read Files:
+-----------
+
+.. code:: python
+
+    with open("/content/esRedditJson/esRedditJson1", "r") as f:
+        some_data = f.read()
+
+    # do something with "some_data"...
+
+---------------------
+See the Full Example:
+---------------------
 
 .. code:: python
     :emphasize-lines: 9-14
@@ -91,13 +121,16 @@ If we expand on the example above, we can see how you might go about listing and
 The ``LightningWork`` component in the code above (``MyWorkClass``) would print out a list of files stored
 in the mounted s3 bucket & then read the contents of a file ``"esRedditJson1"``.
 
-=============================
-Mounts & Locally Running Apps
-=============================
+.. note::
 
-When running a Lighting App on your local machine, any ``CloudCompute`` configuration (including a ``Mount``)
-is ignored at runtime. If you need access to these files on your local disk, you should download a copy of them
-to your machine.
+    When running a Lighting App on your local machine, any ``CloudCompute`` configuration (including a ``Mount``)
+    is ignored at runtime. If you need access to these files on your local disk, you should download a copy of them
+    to your machine.
+
+.. note::
+
+    Mounted files from an S3 bucket are ``read-only``. Any modifications, additions, or deletions
+    to files in the mounted directory will not be reflected in the cloud object store.
 
 ===========
 Limitations
@@ -105,7 +138,7 @@ Limitations
 
 Currently the following limitations are enforced when using a ``Mount``:
 
-* Mounted files from an S3 bucket are ``read only``. Any modifications, additions, or deletions
+* Mounted files from an S3 bucket are ``read-only``. Any modifications, additions, or deletions
   to files in the mounted directory will not be reflected in the cloud object store.
 * Mounts can only be configured for a ``LightningWork``. Use in ``LightningFlow`` is not currently supported.
 * We enforce a hard limit of ``1,000,000`` objects which we can mount from a particular bucket prefix.
@@ -114,6 +147,7 @@ Currently the following limitations are enforced when using a ``Mount``:
   arguments (a unique mount point).
 
 .. note::
+
    If the bucket prefix contains more than ``1,000,000`` objects or a file greater than ``5 GiB`` in size
    then the ``LightningWork`` will fail to start before it even begins running on the cloud.
 
