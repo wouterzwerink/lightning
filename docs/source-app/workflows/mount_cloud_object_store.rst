@@ -53,10 +53,6 @@ You can also pass multiple mounts to a single work by passing a ``List[Mount(...
     * When adding multiple mounts, each one should have a unique ``mount_path``.
     * A maximum of 10 :class:`~lightning_app.storage.mount.Mount`\s can be added to a :class:`~lightning_app.core.work.LightningWork`.
 
-    If the bucket prefix contains more than 1M files or a file greater than 5 GiB in size
-    then the :class:`~lightning_app.core.work.LightningWork` will fail to start before it
-    even begins running on the cloud.
-
 =======================
 Read Files From a Mount
 =======================
