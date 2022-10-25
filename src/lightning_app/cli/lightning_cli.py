@@ -6,12 +6,13 @@ from typing import Any, List, Tuple, Union
 import arrow
 import click
 import rich
-from lightning_cloud.openapi import Externalv1LightningappInstance
+from lightning_cloud.openapi import Externalv1LightningappInstance, V1LightningappInstanceState
 from requests.exceptions import ConnectionError
 from rich.color import ANSI_COLOR_NAMES
 
 from lightning_app import __version__ as ver
 from lightning_app.cli import cmd_init, cmd_install, cmd_pl_init, cmd_react_ui_init
+from lightning_app.cli.cmd_apps import _AppManager
 from lightning_app.cli.cmd_clusters import AWSClusterManager
 from lightning_app.cli.commands.app_commands import _run_app_command
 from lightning_app.cli.commands.connection import (
@@ -430,6 +431,62 @@ _main.add_command(delete)
 _main.add_command(create)
 _main.add_command(cli_add)
 _main.add_command(cli_remove)
+
+
+@_main.command("ssh")
+@click.option(
+    "--app-id",
+    "app_id",
+    type=str,
+    default=None,
+    required=False,
+)
+@click.option(
+    "--component-name",
+    "component_name",
+    type=str,
+    default=None,
+    help="Specify which component to SSH into",
+)
+def ssh(app_id: str = None, component_name: str = None) -> None:
+    """SSH into a Lighting App."""
+    import inquirer
+
+    app_manager = _AppManager()
+    if app_id is None:
+        apps = app_manager.list_apps(phase_in=[V1LightningappInstanceState.RUNNING])
+        if len(apps) == 0:
+            raise click.ClickException("no running apps available.")
+        available_apps = [
+            inquirer.List(
+                "app_name",
+                message="What app to SSH into?",
+                choices=[app.name for app in apps],
+            ),
+        ]
+        app_name = inquirer.prompt(available_apps)["app_name"]
+        app_id = [app.id for app in apps if app.name == app_name][0]
+
+    component_id = f"lightningapp-{app_id}"
+    components = app_manager.list_components(app_id=app_id)
+    if component_name is None:
+        available_components = [
+            inquirer.List(
+                "component",
+                message="Which component to SSH into?",
+                choices=[work.name for work in components] + ["flow"],
+            )
+        ]
+        component_name = inquirer.prompt(available_components)["component"]
+
+    if component_name != "flow":
+        work_id = [work.id for work in components if work.name == component_name][0]
+        component_id = f"lightningwork-{work_id}"
+    instance = app_manager.get_app(app_id=app_id)
+    cluster = app_manager.api_client.cluster_service_get_cluster(id=instance.spec.cluster_id)
+    ssh_endpoint = cluster.status.ssh_gateway_endpoint
+
+    os.execv("/usr/bin/ssh", ["-tt", f"{component_id}@{ssh_endpoint}"])
 
 
 @_main.group()
