@@ -61,6 +61,7 @@ def test_main_lightning_cli_no_arguments():
     assert "show    " in res
     assert "add     " in res
     assert "remove  " in res
+    assert "ssh     " in res
 
 
 def test_main_lightning_cli_help():
@@ -75,6 +76,7 @@ def test_main_lightning_cli_help():
     assert "show    " in res
     assert "add     " in res
     assert "remove  " in res
+    assert "ssh     " in res
 
     res = os.popen("python -m lightning run --help").read()
     assert "app  " in res
