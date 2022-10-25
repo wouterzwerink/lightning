@@ -71,7 +71,7 @@ Welcome to ⚡ Lightning Apps
    Develop a Lightning App <workflows/build_lightning_app/index>
    Develop a Lightning Component <workflows/build_lightning_component/index>
    Extend an existing app <workflows/extend_app>
-   Mount Data From a Cloud Bucket <workflows/mount_cloud_object_store>
+   Mount Cloud Data <workflows/mount_cloud_object_store>
    Publish a Lightning component <workflows/build_lightning_component/publish_a_component>
    Run a server within a Lightning App <workflows/add_server/index>
    Run an App on the cloud <workflows/run_app_on_cloud/index>

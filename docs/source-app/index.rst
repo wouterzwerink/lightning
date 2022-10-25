@@ -227,7 +227,7 @@ Keep Learning
    Develop a Lightning Component <workflows/build_lightning_component/index>
    Develop a REST API <workflows/build_rest_api/index>
    Extend an existing app <workflows/extend_app>
-   Mount Data from a Cloud Object Store to the Filesystem <workflows/mount_cloud_object_store>
+   Mount Cloud Data <workflows/mount_cloud_object_store>
    Publish a Lightning component <workflows/build_lightning_component/publish_a_component>
    Run a server within a Lightning App <workflows/add_server/index>
    Run an App on the cloud <workflows/run_app_on_cloud/index>

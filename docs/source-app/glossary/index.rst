@@ -53,7 +53,7 @@ Glossary
 
 .. displayitem::
    :header: Mounts
-   :description: Mount Data from a Cloud Bucket
+   :description: Mount Cloud Data
    :col_css: col-md-6
    :button_link: mount.html
    :height: 180
