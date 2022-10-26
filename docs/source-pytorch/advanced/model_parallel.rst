@@ -1074,9 +1074,6 @@ Enable `PowerSGD for multi-node throughput improvement <https://pytorch.org/docs
 
 Combine hooks for accumulated benefit:
 
-.. note::
-    DDP communication wrappers support requires PyTorch>=1.9.0
-
 .. code-block:: python
 
     from pytorch_lightning import Trainer

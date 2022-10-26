@@ -25,6 +25,7 @@ subprojects:
       - ".actions/**"
     checks:
       # Note: updates here should be applied to the lightning_lite group
+      # FIXME
       - "pl-cpu (macOS-11, pytorch, 3.8, 1.10)"
       - "pl-cpu (macOS-11, pytorch, 3.9, 1.11)"
       - "pl-cpu (macOS-11, pytorch, 3.10, 1.12)"
