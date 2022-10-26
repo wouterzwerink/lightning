@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added an error message when attempting to launch processes with `python -i` and an interactive-incompatible strategy ([#15293](https://github.com/Lightning-AI/lightning/pull/15293))
 Added `LightningLite.setup_model()` and `LightningLite.setup_optimizers()` to support strategies that need to set up the model before an optimizer can be created ([#15185](https://github.com/Lightning-AI/lightning/pull/15185))
 
 
@@ -19,6 +20,9 @@ Added `LightningLite.setup_model()` and `LightningLite.setup_optimizers()` to su
 ### Changed
 
 
+### Fixed
+
+- Fixed a pickling error when using `RichProgressBar` together with checkpointing ([#15319](https://github.com/Lightning-AI/lightning/pull/15319))
 
 
 ## [1.8.0] - 2022-MM-DD
@@ -184,6 +188,8 @@ Added `LightningLite.setup_model()` and `LightningLite.setup_optimizers()` to su
 - Do not update on-plateau schedulers when reloading from an end-of-epoch checkpoint ([#14702](https://github.com/Lightning-AI/lightning/pull/14702))
 - Fixed `Trainer` support for PyTorch built without distributed support ([#14971](https://github.com/Lightning-AI/lightning/pull/14971))
 - Fixed batch normalization statistics calculation in `StochasticWeightAveraging` callback ([#14866](https://github.com/Lightning-AI/lightning/pull/14866))
+- Avoided initializing optimizers during deepspeed inference ([#14944](https://github.com/Lightning-AI/lightning/pull/14944))
+- Fixed `LightningCLI` parse_env and description in subcommands ([#15138](https://github.com/Lightning-AI/lightning/pull/15138))
 
 
 ## [1.7.7] - 2022-09-22
