@@ -11,7 +11,7 @@ from lightning_app.cli.core import Formatable
 from lightning_app.utilities.network import LightningClient
 
 
-class SSHKeyList(Formatable):
+class _SSHKeyList(Formatable):
     def __init__(self, ssh_keys: List[V1SSHPublicKey]):
         self.ssh_keys = ssh_keys
 
@@ -29,28 +29,28 @@ class SSHKeyList(Formatable):
         return table
 
 
-class SSHKeyManager:
-    """SSHKeyManager implements API calls specific to Lightning AI SSH-Keys."""
+class _SSHKeyManager:
+    """_SSHKeyManager implements API calls specific to Lightning AI SSH-Keys."""
 
     def __init__(self) -> None:
         self.api_client = LightningClient()
 
-    def get_ssh_keys(self) -> SSHKeyList:
+    def get_ssh_keys(self) -> _SSHKeyList:
         resp = self.api_client.s_sh_public_key_service_list_ssh_public_keys()
-        return SSHKeyList(resp.ssh_keys)
+        return _SSHKeyList(resp.ssh_keys)
 
     def list(self) -> None:
         ssh_keys = self.get_ssh_keys()
         console = Console()
         console.print(ssh_keys.as_table())
 
-    def add_key(self, name: Optional[str], public_key: str, comment: str) -> None:
+    def add_key(self, public_key: str, name: Optional[str], comment: Optional[str]) -> None:
         key_name = name if name is not None else "-".join(random.choice(string.ascii_lowercase) for _ in range(5))
         self.api_client.s_sh_public_key_service_create_ssh_public_key(
             V1CreateSSHPublicKeyRequest(
                 name=key_name,
                 public_key=public_key,
-                comment=comment,
+                comment=comment if comment is not None else key_name,
             )
         )
 
