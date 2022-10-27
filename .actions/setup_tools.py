@@ -238,7 +238,7 @@ def create_mirror_package(src_folder: str, lit_pkg_mapping: dict) -> None:
 
 def distribute_version(src_folder: str, ver_file: str = "version.info") -> None:
     """Replace the template date with today."""
-    ls_ver = glob.glob(os.path.join(src_folder, "__version__.py"))
+    ls_ver = glob.glob(os.path.join(src_folder, "*", "__version__.py"))
     ver_template = os.path.join(src_folder, ver_file)
     for fpath in ls_ver:
         os.remove(fpath)
