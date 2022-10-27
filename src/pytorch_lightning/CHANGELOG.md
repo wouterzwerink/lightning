@@ -56,7 +56,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-- Drop PyTorch 1.8 support ([#15347](https://github.com/Lightning-AI/lightning/pull/15347))
+- Drop PyTorch 1.9 support ([#15347](https://github.com/Lightning-AI/lightning/pull/15347))
 - The `Trainer.{fit,validate,test,predict,tune}` methods now raise a useful error message if the input is not a `LightningModule` ([#13892](https://github.com/Lightning-AI/lightning/pull/13892))
 - Raised a `MisconfigurationException` if batch transfer hooks are overriden with `IPUAccelerator` ([#13961](https://github.com/Lightning-AI/lightning/pull/13961))
 - Replaced the unwrapping logic in strategies with direct access to unwrapped `LightningModule` ([#13738](https://github.com/Lightning-AI/lightning/pull/13738))
