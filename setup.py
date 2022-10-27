@@ -98,7 +98,8 @@ if __name__ == "__main__":
     if _PACKAGE_NAME not in _PACKAGE_MAPPING:  # install everything
         _SETUP_TOOLS._load_aggregate_requirements(_PATH_REQUIRE, _FREEZE_REQUIREMENTS)
 
-    _SETUP_TOOLS.create_mirror_package(os.path.join(_PATH_ROOT, "src"), _PACKAGE_MAPPING)
+    _SETUP_TOOLS.distribute_version(_PATH_SRC)
+    _SETUP_TOOLS.create_mirror_package(_PATH_SRC, _PACKAGE_MAPPING)
 
     _SETUP_MODULE = _load_py_module(name="pkg_setup", location=_PATH_SETUP)
     _SETUP_MODULE._adjust_manifest(pkg_name=_REAL_PKG_NAME)

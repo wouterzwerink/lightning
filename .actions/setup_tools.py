@@ -19,7 +19,6 @@ import shutil
 import tarfile
 import tempfile
 import urllib.request
-from datetime import datetime
 from distutils.version import LooseVersion
 from importlib.util import module_from_spec, spec_from_file_location
 from itertools import chain
@@ -237,18 +236,13 @@ def create_mirror_package(src_folder: str, lit_pkg_mapping: dict) -> None:
         copy_adjusted_modules(src_folder, pkg_name, lit_name, lit_pkg_mapping)
 
 
-def set_version_today(fpath: str) -> None:
+def distribute_version(src_folder: str, ver_file: str = "version.info") -> None:
     """Replace the template date with today."""
-    with open(fpath) as fp:
-        lines = fp.readlines()
-
-    def _replace_today(ln):
-        today = datetime.now()
-        return ln.replace("YYYY.-M.-D", f"{today.year}.{today.month}.{today.day}")
-
-    lines = list(map(_replace_today, lines))
-    with open(fpath, "w") as fp:
-        fp.writelines(lines)
+    ls_ver = glob.glob(os.path.join(src_folder, "__version__.py"))
+    ver_template = os.path.join(src_folder, ver_file)
+    for fpath in ls_ver:
+        os.remove(fpath)
+        shutil.copy(ver_template, fpath)
 
 
 def _download_frontend(pkg_path: str):
