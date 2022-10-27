@@ -38,7 +38,7 @@ class CheckModelRestore(ModelWithAdamOptimizer):
         )
 
         for optimizer, state in zip(self.trainer.optimizers, self.old_optimizer_states):
-            optimizer.consolidate_state_dict()
+            # optimizer.consolidate_state_dict()
             self._is_equal(optimizer.state_dict(), state)
 
     def _is_equal(self, a, b):
